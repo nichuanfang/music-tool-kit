@@ -1,0 +1,4 @@
+yt-dlp>=2023.10.7
+ffmpeg>=1.4
+requests>=2.26.0
+mutagen>=1.47.0
