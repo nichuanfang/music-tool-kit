@@ -8,7 +8,7 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 
 setup(
     name='music-tool-kit',
-    version='0.0.9',
+    version='0.1.1',
     description='A tool kit for music download and clip',
     long_description_content_type='text/markdown',
     long_description=readme,
@@ -18,6 +18,7 @@ setup(
     license='MIT',
     platforms='any',
     keywords=[
+        'mk'
         'mtk'
         'music',
         'musictool',
@@ -28,13 +29,13 @@ setup(
     ],
     packages=find_packages(exclude=['tests']),
     package_data={
-        'mtk': ['*.txt'],
+        'mk': ['*.txt'],
     },
     require_python='>=3.8',
     install_requires=requirements,
     entry_points={
         'console_scripts': [
-            'musictool = mtk.__main__:main',
+            'mk = mk.__main__:main',
         ]
     },
     classifiers=[

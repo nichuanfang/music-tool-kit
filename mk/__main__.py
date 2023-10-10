@@ -1,8 +1,7 @@
 # !/usr/bin/env python3
 
 import sys
-import requests
-from mtk.mp3_util import MP3
+from mk.mp3_util import MP3
 from yt_dlp import  YoutubeDL
 
 # 提取yt_dlp信息
@@ -48,6 +47,11 @@ def download(url:str,title:str=None,cover_url:str=None):
             mp3.add_title(title)
         if cover_url != None:
                 mp3.add_cover(cover_url)
+        else:
+            info = extract_info(url)
+            if  'thumbnail' in info:
+                thumbnail = info['thumbnail']
+                mp3.add_cover(thumbnail)
         mp3.save()
     else:
         info = extract_info(url)
@@ -57,8 +61,9 @@ def download(url:str,title:str=None,cover_url:str=None):
         if  cover_url != None:
             mp3.add_cover(cover_url)
         else:
-            thumbnail = info['thumbnail']    
-            mp3.add_cover(thumbnail)
+            if  'thumbnail' in info:
+                thumbnail = info['thumbnail']    
+                mp3.add_cover(thumbnail)
         mp3.save()
     
     print('下载完成!')
@@ -80,9 +85,9 @@ def main(args=None):
     if len(args) == 0:
         print('configuration:\n\n'
             '---------------------------------------------\n'+
-            '下载: musictool url [title] [cover_url]\n'+
-            '剪辑: musictool -clip path start end\n'
-            '提取伴奏: musictool -extract path\n'
+            '下载: mk url [title] [cover_url]\n'+
+            '剪辑: mk -c path start end\n'
+            '提取伴奏: mk -e path\n'
             '---------------------------------------------\n'
             )
         return
