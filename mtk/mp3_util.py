@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# !/usr/bin/env python3
 import requests
 import os
 from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB

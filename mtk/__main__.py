@@ -1,3 +1,5 @@
+# !/usr/bin/env python3
+
 import sys
 import requests
 from mtk.mp3_util import MP3
@@ -9,7 +11,7 @@ def  extract_info(url):
     info = ydl.extract_info(url, download=False)
     return info
 
-def download(url:str,title:str|None=None,cover_url:str|None=None):
+def download(url:str,title:str=None,cover_url:str=None):
     """下载mp3格式的音乐
     Args:
         url (str): 歌曲网址
@@ -78,8 +80,9 @@ def main(args=None):
     if len(args) == 0:
         print('configuration:\n\n'
             '---------------------------------------------\n'+
-            '下载: mtk url [title] [cover_url]\n'+
-            '剪辑: mtk --clip path start end\n'
+            '下载: musictool url [title] [cover_url]\n'+
+            '剪辑: musictool -clip path start end\n'
+            '提取伴奏: musictool -extract path\n'
             '---------------------------------------------\n'
             )
         return
