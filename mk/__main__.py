@@ -92,7 +92,7 @@ def clip(path:str,start:str,end:str):
     if  img_data!=None:
         # 添加封面
         mp3 = MP3(path)
-        mp3.add_cover(img_data)
+        mp3.add_bytes_cover(img_data)
         mp3.save()
     print('剪辑完成!')
 
@@ -161,7 +161,7 @@ if  __name__ == '__main__':
     # title = info['title']
     
     
-    # download('https://youtu.be/xsk1SLmf9a0?si=zj8z06UGwLAKEMOj','Handbook - See The World','https://i2.cdn.turner.com/cnn/2008/WORLD/asiapcf/09/03/ta.jaychou/art.jaychou.jpg')
+    # download('https://www.bilibili.com/video/BV1yt41177RB?t=253.7')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
     
