@@ -1,7 +1,8 @@
 # !/usr/bin/env python3
-
+import os
 import sys
-from mk.mp3_util import MP3
+from mk.mp3_util import MP3,ID3
+from mutagen import File
 from yt_dlp import  YoutubeDL
 
 # 提取yt_dlp信息
@@ -72,11 +73,28 @@ def clip(path:str,start:str,end:str):
     """剪辑音乐
 
     Args:
-        path (str): 歌曲文件路径
+        path (str): 歌曲文件url
         start (str): 开始时间(格式 00:00:00)
         end (str): 结束时间(格式 00:00:00)
-    """    
-    pass
+    """ 
+    try:
+        audio=File(path)
+        img_data = audio.tags._DictProxy__dict['APIC:Cover'].data
+    except:
+        img_data = None
+    command = f'ffmpeg -i {path} -ss {start} -t {end} -acodec copy output.mp3'
+    # 执行命令
+    os.system(command)
+    # 删除原文件
+    os.remove(path)
+    # 重命名
+    os.rename('output.mp3',path)
+    if  img_data!=None:
+        # 添加封面
+        mp3 = MP3(path)
+        mp3.add_cover(img_data)
+        mp3.save()
+    print('剪辑完成!')
 
 def main(args=None):
     if args == None:
@@ -92,12 +110,12 @@ def main(args=None):
             )
         return
     flag = args[0]
-    if flag == '--clip':
+    if flag == '-c':
         path = args[1]
         start = args[2]
         end = args[3]
         clip(path,start,end)
-    elif flag == '-extract':
+    elif flag == '-e':
         pass
     else:
         # 默认下载
@@ -147,7 +165,7 @@ if  __name__ == '__main__':
     
     
     # download('https://youtu.be/xsk1SLmf9a0?si=zj8z06UGwLAKEMOj','Handbook - See The World','https://i2.cdn.turner.com/cnn/2008/WORLD/asiapcf/09/03/ta.jaychou/art.jaychou.jpg')
-    
+    # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
     
     

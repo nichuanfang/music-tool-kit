@@ -64,6 +64,17 @@ class MP3:
             data=image_data
         )
         print(f'封面{cover_url}添加完成')
+        
+    # 给mp3文件添加封面
+    def add_cover(self,image_data:bytes):
+        # 插入封面
+        self.songFile['APIC'] = APIC(  
+            encoding=0,
+            mime='image/jpg',
+            type=3,
+            desc=u'Cover',
+            data=image_data
+        )
 
     # 给mp3文件添加歌名
     def add_title(self,title):
