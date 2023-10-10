@@ -24,10 +24,10 @@ class MP3:
             mp3path (str): mp3文件路径
         """        
         try:
-            self.mp3path = mp3path
+            self.mp3path = mp3path.replace('?','')
             self.songFile = ID3(mp3path)
         except:
-            print('mp3路径不存在!')
+            print(f'mp3路径:{mp3path}不存在!')
             return
     
     # 给mp3文件添加封面

@@ -1,1 +1,10 @@
 # 推送到pypi
+name: release_to pypi
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release_to:

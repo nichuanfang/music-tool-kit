@@ -1,6 +1,7 @@
 # !/usr/bin/env python3
 import os
 import sys
+from time import sleep
 from mk.mp3_util import MP3,ID3
 from mutagen import File
 from yt_dlp import  YoutubeDL
@@ -28,6 +29,9 @@ def download(url:str,title:str=None,cover_url:str=None):
         'no_color': True,
         'format': 'bestaudio/best',
         'outtmpl': outtmpl,
+        'paths': {
+            'home': 'temp'
+        },
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -37,15 +41,21 @@ def download(url:str,title:str=None,cover_url:str=None):
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
         
+    # 解决不规则标题引起的控制台乱码问题
+    
+    # 获取temp文件夹mp3文件
+    mp3s = os.listdir('temp')
+    # 获取mp3文件路径
+    mp3_path = os.path.join('temp',mp3s[0])
+    mp3 = MP3(mp3_path)
     if  title != None:
-        mp3 = MP3(f'{title}.mp3')
         if title.find('-') != -1:
             song = title.split('-')[0]
             artist = title.split('-')[1]
-            mp3.add_title(song)
+            mp3.add_title(song.replace(' ','').replace('?','').replace('#',''))
             mp3.add_artist(artist)
         else:
-            mp3.add_title(title)
+            mp3.add_title(title.replace(' ','').replace('?','').replace('#',''))
         if cover_url != None:
                 mp3.add_cover(cover_url)
         else:
@@ -57,7 +67,6 @@ def download(url:str,title:str=None,cover_url:str=None):
     else:
         info = extract_info(url)
         title = info['title']
-        mp3 = MP3(f'{title}.mp3')
         mp3.add_title(title)
         if  cover_url != None:
             mp3.add_cover(cover_url)
@@ -68,6 +77,18 @@ def download(url:str,title:str=None,cover_url:str=None):
         mp3.save()
     
     print('下载完成!')
+    # 多平台将temp文件夹下的文件移动到当前目录
+    if sys.platform == 'win32':
+        os.system(f'move temp\\*.* .')
+    else:
+        os.system(f'mv temp/* .')
+    
+    # 多平台删除temp文件夹
+    if sys.platform == 'win32':
+        os.system('rmdir temp')
+    else:
+        os.system('rm -rf temp')
+    
     
 def clip(path:str,start:str,end:str):
     """剪辑音乐
@@ -105,7 +126,7 @@ def main(args=None):
             '---------------------------------------------\n'+
             '下载: mk url [title] [cover_url]\n'+
             '剪辑: mk -c path start end\n'
-            '---------------------------------------------\n'
+            '---------------------------------------------\n' 
             )
         return
     flag = args[0]
@@ -161,7 +182,7 @@ if  __name__ == '__main__':
     # title = info['title']
     
     
-    # download('https://www.bilibili.com/video/BV1yt41177RB?t=253.7')
+    # download('https://www.bilibili.com/video/BV1TG411V7AS?t=1.9','勘ぐれい-周杰伦')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
     
