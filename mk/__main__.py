@@ -73,7 +73,7 @@ def clip(path:str,start:str,end:str):
     """剪辑音乐
 
     Args:
-        path (str): 歌曲文件url
+        path (str): 歌曲文件路径
         start (str): 开始时间(格式 00:00:00)
         end (str): 结束时间(格式 00:00:00)
     """ 
@@ -105,7 +105,6 @@ def main(args=None):
             '---------------------------------------------\n'+
             '下载: mk url [title] [cover_url]\n'+
             '剪辑: mk -c path start end\n'
-            '提取伴奏: mk -e path\n'
             '---------------------------------------------\n'
             )
         return
@@ -115,8 +114,6 @@ def main(args=None):
         start = args[2]
         end = args[3]
         clip(path,start,end)
-    elif flag == '-e':
-        pass
     else:
         # 默认下载
         # 判断flag是否是网址

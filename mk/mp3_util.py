@@ -3,19 +3,10 @@
 import requests
 import os
 from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB
-
-def get_image_bytes(image_url):
-    # 发送HTTP请求，获取图片内容
-    response = requests.get(image_url)
-    
-    # 将图片内容转换为字节数据
-    image_bytes = response.content
-    
-    return image_bytes
+from PIL import Image
 
 # webp转jpg
 def  webp2jpg(webp_path,jpg_path):
-    from PIL import Image
     im = Image.open(webp_path).convert('RGB')
     im.save(jpg_path, 'jpeg')
     # 删除webp文件
