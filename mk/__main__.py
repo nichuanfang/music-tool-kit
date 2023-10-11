@@ -21,10 +21,13 @@ def download(url:str,title:str=None,cover_url:str=None):
     """ 
     # 多平台强制删除temp文件夹
     try:
-        if sys.platform == 'win32':
-            os.system('rmdir /s/q temp')
-        else:
-            os.system('rm -rf temp')
+        # 判断文件夹是否存在
+        if os.path.exists('temp'):
+            if sys.platform == 'win32':
+                # 判断文件夹是否存在
+                os.system('rmdir /s/q temp')
+            else:
+                os.system('rm -rf temp')
     except:
         pass
     album = None
@@ -218,7 +221,7 @@ if  __name__ == '__main__':
     # title = info['title']
     
     
-    # download('https://www.bilibili.com/video/BV1jT4y1G75c?t=14.1','东风破-周杰伦')
+    download('https://www.bilibili.com/video/BV1jT4y1G75c?t=14.1','东风破-周杰伦')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
     
