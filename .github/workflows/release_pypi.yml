@@ -31,24 +31,26 @@ jobs:
         run: |
           echo ::set-output name=version::$(curl -s https://pypi.org/pypi/music-tool-kit/json | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
 
-      # 如果version和curr_version相同退出工作流
-      - name: Check version
-        if: ${{ steps.get_version.outputs.version }}==${{ steps.get_pypi_version.outputs.curr_version }}
-        env:
-          version: ${{ steps.get_version.outputs.version }}
-          curr_version: ${{ steps.get_pypi_version.outputs.version }}
-        run: |
-          echo $version
-          echo $curr_version
-          echo "version is same, exit"
-          exit 1
+      # # 如果version和curr_version相同退出工作流
+      # - name: Check version
+      #   if: ${{ steps.get_version.outputs.version }}==${{ steps.get_pypi_version.outputs.curr_version }}
+      #   env:
+      #     version: ${{ steps.get_version.outputs.version }}
+      #     curr_version: ${{ steps.get_pypi_version.outputs.version }}
+      #   run: |
+      #     echo $version
+      #     echo $curr_version
+      #     echo "version is same, exit"
+      #     exit 1
 
       - name: Install dependencies
+        if: ${{ steps.get_version.outputs.version }}!=${{ steps.get_pypi_version.outputs.curr_version }}
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
 
       - name: Build and publish
+        if: ${{ steps.get_version.outputs.version }}!=${{ steps.get_pypi_version.outputs.curr_version }}
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
