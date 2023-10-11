@@ -69,7 +69,8 @@ def download(url:str,title:str=None,cover_url:str=None):
                 song = title.rsplit('-',1)[0]
                 mp3.add_album(title)
             artist = title.split('-')[1]
-            mp3.add_title(song.replace(' ','').replace('?','').replace('#',''))
+            # 前后去空串
+            mp3.add_title(song.replace('?','').replace('#',''))
             mp3.add_artist(artist)
         else:
             if album!=None:
@@ -79,7 +80,7 @@ def download(url:str,title:str=None,cover_url:str=None):
                     mp3.add_album(f'{title}-{info["uploader"]}')
                 else:
                     mp3.add_album(title+'-Unknown Artist')
-            mp3.add_title(title.replace(' ','').replace('?','').replace('#',''))
+            mp3.add_title(title.replace('?','').replace('#',''))
             if 'uploader' in info:
                 mp3.add_artist(info['uploader'])
             else:
