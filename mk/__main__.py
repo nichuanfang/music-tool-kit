@@ -71,7 +71,7 @@ def download(url:str,title:str=None,cover_url:str=None):
                 mp3.add_album(album)
             else:
                 if 'uploader' in info:
-                    mp3.add_album(f'{title-{info["uploader"]}}')
+                    mp3.add_album(f'{title}-{info["uploader"]}')
                 else:
                     mp3.add_album(title+'-Unknown Artist')
             mp3.add_title(title.replace(' ','').replace('?','').replace('#',''))
