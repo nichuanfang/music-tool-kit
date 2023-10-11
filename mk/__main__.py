@@ -19,7 +19,13 @@ def download(url:str,title:str=None,cover_url:str=None):
         name (str): 歌曲[-歌手]
         cover_url (str, optional): 封面url. Defaults to None.
     """ 
+    album = None
     if title != None:
+        # 判断是否有专辑
+        if title.find('(') != -1 and title.endswith(')') and len(title.split('(')[1].split(')')[0])!=0:
+            # 去除专辑格式
+            album = title.split('(')[1].split(')')[0]
+            title = title.rsplit('(',1)[0]
         outtmpl = f'{title}.%(ext)s'
     else:
         outtmpl = '%(title)s.%(ext)s'
@@ -40,6 +46,7 @@ def download(url:str,title:str=None,cover_url:str=None):
     }
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
+        info = extract_info(url)
         
     # 解决不规则标题引起的控制台乱码问题
     
@@ -50,24 +57,44 @@ def download(url:str,title:str=None,cover_url:str=None):
     mp3 = MP3(mp3_path)
     if  title != None:
         if title.find('-') != -1:
-            song = title.split('-')[0]
+            if album!=None:
+                mp3.add_album(album)
+                song = title.rsplit('-',1)[0].rsplit('(',1)[0]
+            else:
+                song = title.rsplit('-',1)[0]
+                mp3.add_album(title)
             artist = title.split('-')[1]
             mp3.add_title(song.replace(' ','').replace('?','').replace('#',''))
             mp3.add_artist(artist)
         else:
+            if album!=None:
+                mp3.add_album(album)
+            else:
+                if 'uploader' in info:
+                    mp3.add_album(f'{title-{info["uploader"]}}')
+                else:
+                    mp3.add_album(title+'-Unknown Artist')
             mp3.add_title(title.replace(' ','').replace('?','').replace('#',''))
+            if 'uploader' in info:
+                mp3.add_artist(info['uploader'])
+            else:
+                mp3.add_artist('Unknown Artist')
         if cover_url != None:
                 mp3.add_cover(cover_url)
         else:
-            info = extract_info(url)
             if  'thumbnail' in info:
                 thumbnail = info['thumbnail']
                 mp3.add_cover(thumbnail)
         mp3.save()
     else:
-        info = extract_info(url)
         title = info['title']
         mp3.add_title(title)
+        if 'uploader' in info:
+            mp3.add_artist(info['uploader'])
+            mp3.add_album(title+'-'+info['uploader'])
+        else:
+            mp3.add_album(title+'-Unknown Artist')
+            mp3.add_artist('Unknown Artist')
         if  cover_url != None:
             mp3.add_cover(cover_url)
         else:
@@ -182,7 +209,7 @@ if  __name__ == '__main__':
     # title = info['title']
     
     
-    # download('https://www.bilibili.com/video/BV1TG411V7AS?t=1.9','勘ぐれい-周杰伦')
+    # download('https://www.bilibili.com/video/BV1jT4y1G75c?t=14.1','东风破-周杰伦')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
     

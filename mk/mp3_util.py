@@ -87,6 +87,7 @@ class MP3:
         
     # 给mp3文件添加专辑
     def add_album(self,album):
+        print(f'开始添加专辑{album}')
         # 插入专辑
         self.songFile['TALB'] = TALB(  
             encoding=3,

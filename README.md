@@ -14,7 +14,7 @@ pip install -U music-tool-kit
 mk  网址 [输出] [封面url]
 ```
 
-> tips: 输出格式为 歌曲名[-歌手] 输出歌曲格式为 mp3 可选, 封面 url 也可选
+> tips: 输出格式为 歌曲名-歌手(专辑名) 输出歌曲格式为 mp3 可选, 封面 url 也可选
 
 - 音乐剪辑
 
