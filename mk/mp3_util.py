@@ -2,7 +2,7 @@
 # !/usr/bin/env python3
 import requests
 import os
-from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB
+from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB,ID3NoHeaderError
 from PIL import Image
 
 # webp转jpg
@@ -26,13 +26,17 @@ class MP3:
         try:
             self.mp3path = mp3path.replace('?','')
             self.songFile = ID3(mp3path)
-        except:
-            print(f'mp3路径:{mp3path}不存在!')
+        except ID3NoHeaderError:
+            self.songFile = ID3()
+            # 获取mp3文件名
+            self.songFile.filename = mp3path.replace('\\','/').rsplit('/',1)[1]
+        except Exception as e:
+            print(e)
             return
     
     # 给mp3文件添加封面
     def add_cover(self,cover_url):
-        mp3_name = self.mp3path.split('.')[0]
+        mp3_name = self.mp3path.replace('\\','/').split('.')[0].rsplit('/',1)[1]
         cover_extension = cover_url.split('.')[-1]
         
         response = requests.get(cover_url)

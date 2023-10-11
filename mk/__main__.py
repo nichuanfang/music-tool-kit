@@ -1,14 +1,17 @@
 # !/usr/bin/env python3
 import os
 import sys
-from time import sleep
 from mk.mp3_util import MP3,ID3
 from mutagen import File
 from yt_dlp import  YoutubeDL
 
 # 提取yt_dlp信息
 def  extract_info(url):
-    ydl = YoutubeDL()
+    ydl = YoutubeDL(params={
+                'quiet': True,
+                'no_color': True,
+                'extract_flat': True
+            })
     info = ydl.extract_info(url, download=False)
     return info
 
@@ -56,8 +59,8 @@ def download(url:str,title:str=None,cover_url:str=None):
         }],
     }
     with YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
         info = extract_info(url)
+        ydl.download([url])
         
     # 解决不规则标题引起的控制台乱码问题
     
@@ -220,8 +223,8 @@ if  __name__ == '__main__':
     # # 获取标题
     # title = info['title']
     
-    
-    download('https://www.bilibili.com/video/BV1jT4y1G75c?t=14.1','东风破-周杰伦')
+    # https://soundcloud.com/jeff-kaale/my-heart'
+    # download('https://soundcloud.com/jeff-kaale/my-heart')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
     
