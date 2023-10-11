@@ -12,7 +12,7 @@ setup(
     description='A tool kit for music download and clip',
     long_description_content_type='text/markdown', 
     long_description=readme,
-    url='https://github.com/nichuanfang/music-tool-kit', 
+    url='https://github.com/nichuanfang/music-tool-kit',  
     author='Nichuan Fang',
     author_email='f18326186224@gmail.com',
     license='MIT',
