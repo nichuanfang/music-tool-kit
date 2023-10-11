@@ -20,10 +20,13 @@ def download(url:str,title:str=None,cover_url:str=None):
         cover_url (str, optional): 封面url. Defaults to None.
     """ 
     # 多平台强制删除temp文件夹
-    if sys.platform == 'win32':
-        os.system('rmdir /s/q temp')
-    else:
-        os.system('rm -rf temp')
+    try:
+        if sys.platform == 'win32':
+            os.system('rmdir /s/q temp')
+        else:
+            os.system('rm -rf temp')
+    except:
+        pass
     album = None
     if title != None:
         # 判断是否有专辑
