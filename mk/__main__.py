@@ -19,9 +19,9 @@ def download(url:str,title:str=None,cover_url:str=None):
         name (str): 歌曲[-歌手]
         cover_url (str, optional): 封面url. Defaults to None.
     """ 
-    # 多平台删除temp文件夹
+    # 多平台强制删除temp文件夹
     if sys.platform == 'win32':
-        os.system('rmdir temp')
+        os.system('rmdir /s/q temp')
     else:
         os.system('rm -rf temp')
     album = None
@@ -117,7 +117,7 @@ def download(url:str,title:str=None,cover_url:str=None):
     
     # 多平台删除temp文件夹
     if sys.platform == 'win32':
-        os.system('rmdir temp')
+        os.system('rmdir /s/q temp')
     else:
         os.system('rm -rf temp')
     
