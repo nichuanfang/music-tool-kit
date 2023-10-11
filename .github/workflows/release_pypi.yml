@@ -23,13 +23,13 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          echo ::set-output name=version::v$(python setup.py --version)
+          echo ::set-output name=version::$(python setup.py --version)
 
       # 获取pypi的该项目的版本号
       - name: Get pypi version
         id: get_pypi_version
         run: |
-          echo ::set-output name=curr_version::$(curl -s https://pypi.org/pypi/${{ github.repository }}/json)['info']['version'])")
+          echo ::set-output name=curr_version::$(curl -s https://pypi.org/pypi/music-tool-kit/json | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
 
       # 如果version和curr_version相同退出工作流
       - name: Check version

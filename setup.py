@@ -10,7 +10,7 @@ setup(
     name='music-tool-kit', 
     version='0.2.5',
     description='A tool kit for music download and clip',
-    long_description_content_type='text/markdown',
+    long_description_content_type='text/markdown', 
     long_description=readme,
     url='https://github.com/nichuanfang/music-tool-kit', 
     author='Nichuan Fang',
