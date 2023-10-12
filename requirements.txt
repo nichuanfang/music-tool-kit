@@ -1,4 +1,4 @@
-setuptools>=58.0.0
+setuptools<57.5
 yt-dlp>=2023.10.7
 requests>=2.26.0
 mutagen>=1.47.0
