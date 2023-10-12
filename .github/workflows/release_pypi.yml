@@ -4,6 +4,9 @@ name: release_to pypi
 # 只在setup.py更新时触发
 on:
   push:
+    # 排除v开头的分支
+    branches-ignore:
+      - 'v*'
 
 jobs:
   release_to:
