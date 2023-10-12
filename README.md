@@ -6,6 +6,8 @@
 pip install -U music-tool-kit
 ```
 
+> python 版本: 3.11.0 及以上
+
 ## 使用
 
 - 音乐下载

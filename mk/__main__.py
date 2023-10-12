@@ -298,7 +298,7 @@ def main(args=None):
         if title == '':
             title = None
         print('正在下载...')
-        download(res[num-1]['url'],res[num-1]['title'],title)
+        download(res[num-1]['url'],title,None)
         print('下载完成!')
     else:
         # 默认下载
