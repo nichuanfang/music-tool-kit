@@ -292,6 +292,22 @@ async def search(name:str):
         
         return result[0]+result[1]
 
+# 同步伴奏元信息 source_path人声+伴奏   dest_path伴奏
+def sync_meta(source_path:str,dest_path:str):
+    # 日志
+    with console.status("[bold green]正在同步元信息...") as status:
+        source_mp3 = MP3(source_path)
+        dest_mp3 = MP3(dest_path)
+        # 将source_mp3的元信息同步到dest_mp3
+        dest_mp3.add_title(source_mp3.songFile['TIT2'].text[0]+'(instrumental)')
+        dest_mp3.add_artist(source_mp3.songFile['TPE1'].text[0])
+        dest_mp3.add_album(source_mp3.songFile['TALB'].text[0])
+        dest_mp3.add_bytes_cover(source_mp3.songFile['APIC:Cover'].data)
+        dest_mp3.save()
+        # 目标文件重命名
+        os.rename(dest_path,source_path.replace('.mp3','(instrumental).mp3'))
+        console.log(f"同步完成!")
+
 def main(args=None):
     if args == None:
         args = sys.argv[1:]
@@ -302,6 +318,7 @@ def main(args=None):
             '下载: mk url [title] [cover_url]\n'+
             '搜索: mk -s name\n'
             '剪辑: mk -c path start end\n'
+            '元信息同步: mk -m source_path dest_path\n'
             '---------------------------------------------\n' 
             )
         return
@@ -342,6 +359,18 @@ def main(args=None):
         if title == '':
             title = None
         download(res[num-1]['url'],title,None)
+    elif  flag == '-m':
+        try:
+            source_path = args[1]
+        except:
+            print('请输入源文件路径!')
+            return
+        try:
+            dest_path = args[2]
+        except:
+            print('请输入目标文件路径!')
+            return
+        sync_meta(source_path,dest_path)
     else:
         # 默认下载
         # 判断flag是否是网址
@@ -397,4 +426,5 @@ if  __name__ == '__main__':
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
+    # sync_meta('圆月下你来依我.mp3','1_圆月下你来依我_(Instrumental).mp3')
     pass
