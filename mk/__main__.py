@@ -1,9 +1,13 @@
 # !/usr/bin/env python3
 import os
 import sys
+import requests
+from  bs4 import BeautifulSoup
 from mk.mp3_util import MP3,ID3
 from mutagen import File
 from yt_dlp import  YoutubeDL
+from fake_useragent import UserAgent
+import  soundcloud
 
 # 提取yt_dlp信息
 def  extract_info(url):
@@ -158,6 +162,107 @@ def clip(path:str,start:str,end:str):
         mp3.add_bytes_cover(img_data)
         mp3.save()
     print('剪辑完成!')
+    
+# 从youtube搜索歌曲
+def search_youtube(name:str):
+    """搜索歌曲
+
+    Args:
+        name (str): 歌曲名称
+    """ 
+    res = []
+    # 从油管获取结果
+    ydl_opts = {
+        'quiet': True,
+        'no_color': True,
+        'format': 'bestaudio/best',
+        'outtmpl': '%(title)s.%(ext)s',
+        'paths': {
+            'home': 'temp'
+        },
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': 0
+        }],
+    }
+    with YoutubeDL(ydl_opts) as ydl:
+        # 搜索3条结果
+        info = ydl.extract_info(f'ytsearch3:{name}', download=False)
+        for i in range(3):
+            title = info['entries'][i]['title']
+            url = info['entries'][i]['webpage_url']
+            res.append({
+                'title': title,
+                'url': url
+            })
+    return res
+
+# 从bilibili搜索歌曲
+def search_bilibili(name:str):
+    """搜索歌曲
+
+    Args:
+        name (str): 歌曲名称
+    """ 
+    res = []
+    ua = UserAgent()
+    # 从bilibili获取搜索结果
+    url = f'https://search.bilibili.com/all?keyword={name}&page=1'
+    headers = {
+        'User-Agent':ua.chrome,
+        'Referer':'https://www.bilibili.com/'
+    }
+    
+    response = requests.get(url,headers=headers)
+    html = response.text
+    soup = BeautifulSoup(html,'lxml')
+    # 获取搜索结果
+    items = soup.find_all('div',class_='video-list row')[0].contents
+    for item in items[:4]:
+        if item == '[' or item == ']':
+            continue
+        title = item.contents[0].contents[1].contents[1].contents[2].contents[0].text
+        url = item.contents[0].contents[1].contents[0].attrs['href']
+        res.append({
+            'title': title,
+            'url': f'https:{url}'
+        })
+    return res
+
+# 搜索soundcloud歌曲
+def search_soundcloud(name:str):
+    """搜索歌曲
+
+    Args:
+        name (str): 歌曲名称
+    """ 
+    res = []
+    client = soundcloud.Client(client_id  = 'Qiipt0EkEtDliaaQ2zktLdLcA2cYr8YL')
+    tracks = client.get('/tracks',q=name,limit=4)
+    for track in tracks:
+        res.append({
+            'title': track.title,
+            'url': track.permalink_url
+        })
+    return res
+
+
+# 搜索歌曲
+def search(name:str):
+    """搜索歌曲
+
+    Args:
+        name (str): 歌曲名称
+    """ 
+    res = []
+    # 从油管获取结果
+    res.extend(search_youtube(name))
+    # 从bilibili获取结果
+    res.extend(search_bilibili(name))
+    # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
+    # res.extend(search_soundcloud(name))
+    return res
 
 def main(args=None):
     if args == None:
@@ -167,6 +272,7 @@ def main(args=None):
         print('configuration:\n\n'
             '---------------------------------------------\n'+
             '下载: mk url [title] [cover_url]\n'+
+            '搜索: mk -s name\n'
             '剪辑: mk -c path start end\n'
             '---------------------------------------------\n' 
             )
@@ -177,6 +283,23 @@ def main(args=None):
         start = args[2]
         end = args[3]
         clip(path,start,end)
+    elif flag == '-s':
+        name = args[1]
+        res = search(name)
+        for i in range(len(res)):
+            print(f'{i+1}. {res[i]["title"]}')
+            print(f'    {res[i]["url"]}')
+        num = int(input('请输入序号:'))
+        if num>len(res) or num<=0:
+            print('序号不合法!')
+            return
+        # 输入标题
+        title = input('请输入标题:')
+        if title == '':
+            title = None
+        print('正在下载...')
+        download(res[num-1]['url'],res[num-1]['title'],title)
+        print('下载完成!')
     else:
         # 默认下载
         # 判断flag是否是网址
