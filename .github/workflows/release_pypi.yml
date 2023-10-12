@@ -68,6 +68,6 @@ jobs:
           tag_name: v${{ steps.get_version.outputs.version }}
           release_name: v${{ steps.get_version.outputs.version }}
           body: |
-            v${{ steps.get_version.outputs.version }}
+            $(git log --pretty=format:"%s" $(git describe --tags --abbrev=0)..HEAD)
           draft: false
           prerelease: false
