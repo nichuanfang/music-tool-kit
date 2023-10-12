@@ -8,7 +8,7 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 
 setup(
     name='music-tool-kit', 
-    version='0.3.6',
+    version='0.3.7',
     description='A tool kit for music download and clip', 
     long_description_content_type='text/markdown', 
     long_description=readme,

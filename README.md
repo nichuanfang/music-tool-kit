@@ -6,7 +6,10 @@
 pip install -U music-tool-kit
 ```
 
-> python 版本: 3.11.0 及以上
+> Tips:
+
+1. python 版本: 3.11.0 及以上
+2. 需安装 ffmpeg
 
 ## 使用
 
