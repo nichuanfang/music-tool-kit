@@ -52,5 +52,18 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           python setup.py sdist bdist_wheel
-          pyinstaller -F -w -i ./music.ico ./mk/__main__.py
           twine upload dist/*
+
+      # 创建release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: ${{ steps.get_version.outputs.version }}
+          body: |
+            ${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
