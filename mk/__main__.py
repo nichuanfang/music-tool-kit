@@ -1,15 +1,15 @@
 # !/usr/bin/env python3
+import asyncio
 import os
 import sys
-import requests
-from  bs4 import BeautifulSoup
 from mk.mp3_util import MP3,ID3
 from mutagen import File
 from yt_dlp import  YoutubeDL
-from fake_useragent import UserAgent
 import  soundcloud
 from rich.console import Console
 from rich import print
+from bilibili_api import search as bilibili_search
+
 
 console = Console()
 
@@ -169,7 +169,7 @@ def clip(path:str,start:str,end:str):
             mp3.add_bytes_cover(img_data)
             mp3.save()
         console.log(f"剪辑完成!")
-    
+
 # 从youtube搜索歌曲
 def search_youtube(name:str):
     """搜索歌曲
@@ -208,39 +208,22 @@ def search_youtube(name:str):
                 continue
     return res
 
-# 从bilibili搜索歌曲
-def search_bilibili(name:str):
-    """搜索歌曲
-
-    Args:
-        name (str): 歌曲名称
-    """ 
+async def search_bilibili(name:str):
+    search = await bilibili_search.search_by_type(name,search_type=bilibili_search.SearchObjectType.VIDEO,page=1)
+    result = search['result']
     res = []
-    ua = UserAgent()
-    # 从bilibili获取搜索结果
-    url = f'https://search.bilibili.com/all?keyword={name}&page=1'
-    headers = {
-        'User-Agent':ua.chrome,
-        'Referer':'https://www.bilibili.com/'
-    }
-    
-    response = requests.get(url,headers=headers)
-    html = response.text
-    soup = BeautifulSoup(html,'lxml')
-    # 获取搜索结果
-    items = soup.find_all('div',class_='video-list row')[0].contents
-    if len(items) >5:
-        items = items[:6]
-    for item in items:
-        if item == '[' or item == ']':
-            continue
-        title = item.contents[0].contents[1].contents[1].contents[2].contents[0].text
-        url = item.contents[0].contents[1].contents[0].attrs['href']
+    for i in range(len(result)):
+        if i == 5:
+            break
+        url = result[i]['arcurl']
+        # 去除<em class="keyword"></em>正则匹配格式
+        title = result[i]['title'].replace('<em class="keyword">','').replace('</em>','').replace('&#39;', '\'')
         res.append({
             'title': title,
-            'url': f'https:{url}'
+            'url': result[i]['arcurl']
         })
-    return res
+    return res    
+
 
 # 搜索soundcloud歌曲
 def search_soundcloud(name:str):
@@ -272,7 +255,7 @@ def search(name:str):
         # 从油管获取结果
         res.extend(search_youtube(name))
         # 从bilibili获取结果
-        res.extend(search_bilibili(name))
+        res.extend(asyncio.run(search_bilibili(name)))
         # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
         # res.extend(search_soundcloud(name))
         return res
@@ -304,6 +287,7 @@ def main(args=None):
         for i in range(len(res)):
             print(f'{i+1}. {res[i]["title"]}')
             print(f'    {res[i]["url"]}')
+        print('')
         exit_status = False
         while True:
             num_str = input('请输入序号:')
@@ -374,4 +358,8 @@ if  __name__ == '__main__':
     # https://soundcloud.com/jeff-kaale/my-heart'
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
+    # res = search_bilibili("a lover's Concerto")
+    # 调用异步函数search_bilibili_
+    # res = asyncio.run(search_bilibili("a lover's Concerto"))
+    # 获取执行的结果
     pass
