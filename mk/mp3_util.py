@@ -101,6 +101,6 @@ class MP3:
     
     def save(self):
         # 保存
-        self.songFile.save()
+        self.songFile.save(self.mp3path.replace('\\','/'))
         print('保存完成')
         
