@@ -29,7 +29,10 @@ class MP3:
         except ID3NoHeaderError:
             self.songFile = ID3()
             # 获取mp3文件名
-            self.songFile.filename = mp3path.replace('\\','/').rsplit('/',1)[1]
+            try:
+                self.songFile.filename = mp3path.replace('\\','/').rsplit('/',1)[1]
+            except Exception as e:
+                self.songFile.filename = mp3path.replace('\\','/')
         except Exception as e:
             print(e)
             return
