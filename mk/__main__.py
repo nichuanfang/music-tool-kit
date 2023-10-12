@@ -9,6 +9,7 @@ import  soundcloud
 from rich.console import Console
 from rich import print
 from bilibili_api import search as bilibili_search
+import difflib
 
 
 console = Console()
@@ -170,6 +171,19 @@ def clip(path:str,start:str,end:str):
             mp3.save()
         console.log(f"剪辑完成!")
 
+# 获取两个字符串相似度
+def get_similarity(s1:str,s2:str):
+    """获取两个字符串相似度
+
+    Args:
+        s1 (str): 字符串1
+        s2 (str): 字符串2
+
+    Returns:
+        float: 相似度
+    """ 
+    return difflib.SequenceMatcher(lambda x: x in [" ","【","】","(",")","-","_",".","[","]","|"], s1.lower(), s2.lower()).ratio()
+
 # 从youtube搜索歌曲
 def search_youtube(name:str):
     """搜索歌曲
@@ -206,6 +220,12 @@ def search_youtube(name:str):
                 })
             except:
                 continue
+    # 根据相似度get_similarity重新排序res 
+    for i in range(len(res)):
+        res[i]['similarity'] = get_similarity(name,res[i]['title'])
+    
+    res.sort(key=lambda x:x['similarity'],reverse=True)
+    
     return res
 
 async def search_bilibili(name:str):
@@ -222,7 +242,13 @@ async def search_bilibili(name:str):
             'title': title,
             'url': result[i]['arcurl']
         })
-    return res    
+    # 根据相似度get_similarity重新排序res 
+    for i in range(len(res)):
+        res[i]['similarity'] = get_similarity(name,res[i]['title'])
+    
+    res.sort(key=lambda x:x['similarity'],reverse=True)
+    
+    return res
 
 
 # 搜索soundcloud歌曲
@@ -358,7 +384,7 @@ if  __name__ == '__main__':
     # https://soundcloud.com/jeff-kaale/my-heart'
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
-    # res = search_bilibili("a lover's Concerto")
+    # res = search("a lover's Concerto")
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
