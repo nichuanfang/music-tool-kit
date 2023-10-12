@@ -182,7 +182,7 @@ def get_similarity(s1:str,s2:str):
     Returns:
         float: 相似度
     """ 
-    return difflib.SequenceMatcher(lambda x: x in [" ","【","】","(",")","-","_",".","[","]","|"], s1.lower(), s2.lower()).ratio()
+    return difflib.SequenceMatcher(lambda x: x in ["【","】","(",")","-","_",".","[","]","|"], s1.lower(), s2.lower()).ratio()
 
 # 从youtube搜索歌曲
 def search_youtube(name:str):
