@@ -208,9 +208,9 @@ def search_youtube(name:str):
         }],
     }
     with YoutubeDL(ydl_opts) as ydl:
-        # 搜索3条结果
-        info = ydl.extract_info(f'ytsearch5:{name}', download=False)
-        for i in range(5):
+        # 搜索20条结果
+        info = ydl.extract_info(f'ytsearch10:{name}', download=False)
+        for i in range(10):
             try:
                 title = info['entries'][i]['title']
                 url = info['entries'][i]['webpage_url']
@@ -219,12 +219,15 @@ def search_youtube(name:str):
                     'url': url
                 })
             except:
-                continue
+                break
     # 根据相似度get_similarity重新排序res 
     for i in range(len(res)):
         res[i]['similarity'] = get_similarity(name,res[i]['title'])
     
     res.sort(key=lambda x:x['similarity'],reverse=True)
+    # 最多只取5条数据
+    if len(res)>5:
+        res = res[:5]
     
     return res
 
@@ -233,9 +236,8 @@ async def search_bilibili(name:str):
     result = search['result']
     res = []
     for i in range(len(result)):
-        if i == 5:
+        if i == 10:
             break
-        url = result[i]['arcurl']
         # 去除<em class="keyword"></em>正则匹配格式
         title = result[i]['title'].replace('<em class="keyword">','').replace('</em>','').replace('&#39;', '\'')
         res.append({
@@ -248,6 +250,9 @@ async def search_bilibili(name:str):
     
     res.sort(key=lambda x:x['similarity'],reverse=True)
     
+    # 最多只取5条数据
+    if len(res)>5:
+        res = res[:5]
     return res
 
 
@@ -384,7 +389,7 @@ if  __name__ == '__main__':
     # https://soundcloud.com/jeff-kaale/my-heart'
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
-    # res = search("a lover's Concerto")
+    res = search("a lover's Concerto")
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
