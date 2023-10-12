@@ -2,6 +2,7 @@
 import asyncio
 import os
 import sys
+import time
 from mk.mp3_util import MP3,ID3
 from mutagen import File
 from yt_dlp import  YoutubeDL
@@ -185,7 +186,7 @@ def get_similarity(s1:str,s2:str):
     return difflib.SequenceMatcher(lambda x: x in ["【","】","(",")","-","_",".","[","]","|"], s1.lower(), s2.lower()).ratio()
 
 # 从youtube搜索歌曲
-def search_youtube(name:str):
+async def search_youtube(name:str):
     """搜索歌曲
 
     Args:
@@ -275,21 +276,21 @@ def search_soundcloud(name:str):
 
 
 # 搜索歌曲
-def search(name:str):
+async def search(name:str):
     """搜索歌曲
 
     Args:
         name (str): 歌曲名称
     """ 
     with console.status("[bold green]搜索中...") as status:
-        res = []
-        # 从油管获取结果
-        res.extend(search_youtube(name))
-        # 从bilibili获取结果
-        res.extend(asyncio.run(search_bilibili(name)))
-        # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
-        # res.extend(search_soundcloud(name))
-        return res
+        tasks = [
+                asyncio.create_task(search_youtube(name)), 
+                asyncio.create_task(search_bilibili(name))]
+                # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
+                # asyncio.create_task(search_soundcloud(name))]
+        result = await asyncio.gather(*tasks)
+        
+        return result[0]+result[1]
 
 def main(args=None):
     if args == None:
@@ -313,7 +314,8 @@ def main(args=None):
     elif flag == '-s':
         name = args[1]
         
-        res = search(name)
+        loop = asyncio.get_event_loop()
+        res:list=  loop.run_until_complete(search(name))
         # 打印搜索结果
         for i in range(len(res)):
             print(f'{i+1}. {res[i]["title"]}')
@@ -389,8 +391,10 @@ if  __name__ == '__main__':
     # https://soundcloud.com/jeff-kaale/my-heart'
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
-    res = search("a lover's Concerto")
+    # loop = asyncio.get_event_loop()
+    # a=  loop.run_until_complete(search("湖畔街-Falcom Sound Team J.D.K"))
+    # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
-    main()
+    pass
