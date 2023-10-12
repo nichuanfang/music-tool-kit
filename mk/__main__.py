@@ -208,7 +208,7 @@ def search_youtube(name:str):
         }],
     }
     with YoutubeDL(ydl_opts) as ydl:
-        # 搜索20条结果
+        # 搜索10条结果
         info = ydl.extract_info(f'ytsearch10:{name}', download=False)
         for i in range(10):
             try:
