@@ -1,6 +1,7 @@
 setuptools==58.0.0
+rich==13.6.0
 yt-dlp==2023.10.7
-requests==2.26.0
+requests>=2.26.0
 mutagen==1.47.0
 pillow==10.0.1
 beautifulsoup4==4.12.2

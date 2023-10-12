@@ -8,6 +8,11 @@ from mutagen import File
 from yt_dlp import  YoutubeDL
 from fake_useragent import UserAgent
 import  soundcloud
+from rich.console import Console
+from rich import print
+
+console = Console()
+
 
 # 提取yt_dlp信息
 def  extract_info(url):
@@ -26,114 +31,115 @@ def download(url:str,title:str=None,cover_url:str=None):
         name (str): 歌曲[-歌手]
         cover_url (str, optional): 封面url. Defaults to None.
     """ 
-    # 多平台强制删除temp文件夹
-    try:
-        # 判断文件夹是否存在
-        if os.path.exists('temp'):
-            if sys.platform == 'win32':
-                # 判断文件夹是否存在
-                os.system('rmdir /s/q temp')
-            else:
-                os.system('rm -rf temp')
-    except:
-        pass
-    album = None
-    if title != None:
-        # 判断是否有专辑
-        if title.find('(') != -1 and title.endswith(')') and len(title.split('(')[1].split(')')[0])!=0:
-            # 去除专辑格式
-            album = title.split('(')[1].split(')')[0]
-            title = title.rsplit('(',1)[0]
-        outtmpl = f'{title}.%(ext)s'
-    else:
-        outtmpl = '%(title)s.%(ext)s'
-        
-    ydl_opts = {
-        'quiet': True,
-        'no_color': True,
-        'format': 'bestaudio/best',
-        'outtmpl': outtmpl,
-        'paths': {
-            'home': 'temp'
-        },
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': 0
-        }],
-    }
-    with YoutubeDL(ydl_opts) as ydl:
-        info = extract_info(url)
-        ydl.download([url])
-        
-    # 解决不规则标题引起的控制台乱码问题
-    
-    # 获取temp文件夹mp3文件
-    mp3s = os.listdir('temp')
-    # 获取mp3文件路径
-    mp3_path = os.path.join('temp',mp3s[0])
-    mp3 = MP3(mp3_path)
-    if  title != None:
-        if title.find('-') != -1:
-            if album!=None:
-                mp3.add_album(album)
-                song = title.rsplit('-',1)[0].rsplit('(',1)[0]
-            else:
-                song = title.rsplit('-',1)[0]
-                mp3.add_album(title)
-            artist = title.split('-')[1]
-            # 前后去空串
-            mp3.add_title(song.replace('?','').replace('#',''))
-            mp3.add_artist(artist)
-        else:
-            if album!=None:
-                mp3.add_album(album)
-            else:
-                if 'uploader' in info:
-                    mp3.add_album(f'{title}-{info["uploader"]}')
+    with console.status("[bold green]正在下载...\n") as status:
+        # 多平台强制删除temp文件夹
+        try:
+            # 判断文件夹是否存在
+            if os.path.exists('temp'):
+                if sys.platform == 'win32':
+                    # 判断文件夹是否存在
+                    os.system('rmdir /s/q temp')
                 else:
-                    mp3.add_album(title+'-Unknown Artist')
-            mp3.add_title(title.replace('?','').replace('#',''))
+                    os.system('rm -rf temp')
+        except:
+            pass
+        album = None
+        if title != None:
+            # 判断是否有专辑
+            if title.find('(') != -1 and title.endswith(')') and len(title.split('(')[1].split(')')[0])!=0:
+                # 去除专辑格式
+                album = title.split('(')[1].split(')')[0]
+                title = title.rsplit('(',1)[0]
+            outtmpl = f'{title}.%(ext)s'
+        else:
+            outtmpl = '%(title)s.%(ext)s'
+            
+        ydl_opts = {
+            'quiet': True,
+            'no_color': True,
+            'format': 'bestaudio/best',
+            'outtmpl': outtmpl,
+            'paths': {
+                'home': 'temp'
+            },
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': 0
+            }],
+        }
+        with YoutubeDL(ydl_opts) as ydl:
+            info = extract_info(url)
+            ydl.download([url])
+            
+        # 解决不规则标题引起的控制台乱码问题
+        
+        # 获取temp文件夹mp3文件
+        mp3s = os.listdir('temp')
+        # 获取mp3文件路径
+        mp3_path = os.path.join('temp',mp3s[0])
+        mp3 = MP3(mp3_path)
+        if  title != None:
+            if title.find('-') != -1:
+                if album!=None:
+                    mp3.add_album(album)
+                    song = title.rsplit('-',1)[0].rsplit('(',1)[0]
+                else:
+                    song = title.rsplit('-',1)[0]
+                    mp3.add_album(title)
+                artist = title.split('-')[1]
+                # 前后去空串
+                mp3.add_title(song.replace('?','').replace('#',''))
+                mp3.add_artist(artist)
+            else:
+                if album!=None:
+                    mp3.add_album(album)
+                else:
+                    if 'uploader' in info:
+                        mp3.add_album(f'{title}-{info["uploader"]}')
+                    else:
+                        mp3.add_album(title+'-Unknown Artist')
+                mp3.add_title(title.replace('?','').replace('#',''))
+                if 'uploader' in info:
+                    mp3.add_artist(info['uploader'])
+                else:
+                    mp3.add_artist('Unknown Artist')
+            if cover_url != None:
+                    mp3.add_cover(cover_url)
+            else:
+                if  'thumbnail' in info:
+                    thumbnail = info['thumbnail']
+                    mp3.add_cover(thumbnail)
+            mp3.save()
+        else:
+            title = info['title']
+            mp3.add_title(title)
             if 'uploader' in info:
                 mp3.add_artist(info['uploader'])
+                mp3.add_album(title+'-'+info['uploader'])
             else:
+                mp3.add_album(title+'-Unknown Artist')
                 mp3.add_artist('Unknown Artist')
-        if cover_url != None:
+            if  cover_url != None:
                 mp3.add_cover(cover_url)
+            else:
+                if  'thumbnail' in info:
+                    thumbnail = info['thumbnail']    
+                    mp3.add_cover(thumbnail)
+            mp3.save()
+        
+        # 多平台将temp文件夹下的文件移动到当前目录
+        if sys.platform == 'win32':
+            os.system(f'move temp\\*.* .')
         else:
-            if  'thumbnail' in info:
-                thumbnail = info['thumbnail']
-                mp3.add_cover(thumbnail)
-        mp3.save()
-    else:
-        title = info['title']
-        mp3.add_title(title)
-        if 'uploader' in info:
-            mp3.add_artist(info['uploader'])
-            mp3.add_album(title+'-'+info['uploader'])
+            os.system(f'mv temp/* .')
+        
+        # 多平台删除temp文件夹
+        if sys.platform == 'win32':
+            os.system('rmdir /s/q temp')
         else:
-            mp3.add_album(title+'-Unknown Artist')
-            mp3.add_artist('Unknown Artist')
-        if  cover_url != None:
-            mp3.add_cover(cover_url)
-        else:
-            if  'thumbnail' in info:
-                thumbnail = info['thumbnail']    
-                mp3.add_cover(thumbnail)
-        mp3.save()
-    
-    print('下载完成!')
-    # 多平台将temp文件夹下的文件移动到当前目录
-    if sys.platform == 'win32':
-        os.system(f'move temp\\*.* .')
-    else:
-        os.system(f'mv temp/* .')
-    
-    # 多平台删除temp文件夹
-    if sys.platform == 'win32':
-        os.system('rmdir /s/q temp')
-    else:
-        os.system('rm -rf temp')
+            os.system('rm -rf temp')
+        console.log(f"下载完成!")
     
     
 def clip(path:str,start:str,end:str):
@@ -144,24 +150,25 @@ def clip(path:str,start:str,end:str):
         start (str): 开始时间(格式 00:00:00)
         end (str): 结束时间(格式 00:00:00)
     """ 
-    try:
-        audio=File(path)
-        img_data = audio.tags._DictProxy__dict['APIC:Cover'].data
-    except:
-        img_data = None
-    command = f'ffmpeg -i {path} -ss {start} -t {end} -acodec copy output.mp3'
-    # 执行命令
-    os.system(command)
-    # 删除原文件
-    os.remove(path)
-    # 重命名
-    os.rename('output.mp3',path)
-    if  img_data!=None:
-        # 添加封面
-        mp3 = MP3(path)
-        mp3.add_bytes_cover(img_data)
-        mp3.save()
-    print('剪辑完成!')
+    with console.status("[bold green]正在剪辑...\n") as status:
+        try:
+            audio=File(path)
+            img_data = audio.tags._DictProxy__dict['APIC:Cover'].data
+        except:
+            img_data = None
+        command = f'ffmpeg -i {path} -ss {start} -t {end} -acodec copy output.mp3'
+        # 执行命令
+        os.system(command)
+        # 删除原文件
+        os.remove(path)
+        # 重命名
+        os.rename('output.mp3',path)
+        if  img_data!=None:
+            # 添加封面
+            mp3 = MP3(path)
+            mp3.add_bytes_cover(img_data)
+            mp3.save()
+        console.log(f"剪辑完成!")
     
 # 从youtube搜索歌曲
 def search_youtube(name:str):
@@ -188,14 +195,17 @@ def search_youtube(name:str):
     }
     with YoutubeDL(ydl_opts) as ydl:
         # 搜索3条结果
-        info = ydl.extract_info(f'ytsearch3:{name}', download=False)
-        for i in range(3):
-            title = info['entries'][i]['title']
-            url = info['entries'][i]['webpage_url']
-            res.append({
-                'title': title,
-                'url': url
-            })
+        info = ydl.extract_info(f'ytsearch5:{name}', download=False)
+        for i in range(5):
+            try:
+                title = info['entries'][i]['title']
+                url = info['entries'][i]['webpage_url']
+                res.append({
+                    'title': title,
+                    'url': url
+                })
+            except:
+                continue
     return res
 
 # 从bilibili搜索歌曲
@@ -219,7 +229,9 @@ def search_bilibili(name:str):
     soup = BeautifulSoup(html,'lxml')
     # 获取搜索结果
     items = soup.find_all('div',class_='video-list row')[0].contents
-    for item in items[:4]:
+    if len(items) >5:
+        items = items[:6]
+    for item in items:
         if item == '[' or item == ']':
             continue
         title = item.contents[0].contents[1].contents[1].contents[2].contents[0].text
@@ -255,14 +267,15 @@ def search(name:str):
     Args:
         name (str): 歌曲名称
     """ 
-    res = []
-    # 从油管获取结果
-    res.extend(search_youtube(name))
-    # 从bilibili获取结果
-    res.extend(search_bilibili(name))
-    # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
-    # res.extend(search_soundcloud(name))
-    return res
+    with console.status("[bold green]搜索中...") as status:
+        res = []
+        # 从油管获取结果
+        res.extend(search_youtube(name))
+        # 从bilibili获取结果
+        res.extend(search_bilibili(name))
+        # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
+        # res.extend(search_soundcloud(name))
+        return res
 
 def main(args=None):
     if args == None:
@@ -285,24 +298,33 @@ def main(args=None):
         clip(path,start,end)
     elif flag == '-s':
         name = args[1]
+        
         res = search(name)
+        # 打印搜索结果
         for i in range(len(res)):
             print(f'{i+1}. {res[i]["title"]}')
             print(f'    {res[i]["url"]}')
-        try:
-            num = int(input('请输入序号:'))
-        except:
+        exit_status = False
+        while True:
+            num_str = input('请输入序号:')
+            if num_str == None or num_str == '':
+                exit_status = True
+                break
+            try:
+                num = int(num_str)
+            except:
+                print('序号必须为数字!')
+                continue
+            if num>len(res) or num<=0:
+                print('序号不合法!')
+                continue
+            break
+        if  exit_status:
             return
-        if num>len(res) or num<=0:
-            print('序号不合法!')
-            return
-        # 输入标题
         title = input('请输入标题:')
         if title == '':
             title = None
-        print('正在下载...')
         download(res[num-1]['url'],title,None)
-        print('下载完成!')
     else:
         # 默认下载
         # 判断flag是否是网址
@@ -353,5 +375,3 @@ if  __name__ == '__main__':
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     pass
-    
-    
