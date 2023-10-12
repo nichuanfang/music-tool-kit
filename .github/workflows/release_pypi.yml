@@ -52,5 +52,5 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           python setup.py sdist bdist_wheel
-          pyinstaller -F setup.py
+          pyinstaller -F -w -i ./music.ico ./mk/__main__.py
           twine upload dist/*

@@ -388,4 +388,4 @@ if  __name__ == '__main__':
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
-    pass
+    main()
