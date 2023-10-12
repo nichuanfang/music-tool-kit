@@ -289,7 +289,10 @@ def main(args=None):
         for i in range(len(res)):
             print(f'{i+1}. {res[i]["title"]}')
             print(f'    {res[i]["url"]}')
-        num = int(input('请输入序号:'))
+        try:
+            num = int(input('请输入序号:'))
+        except:
+            return
         if num>len(res) or num<=0:
             print('序号不合法!')
             return
