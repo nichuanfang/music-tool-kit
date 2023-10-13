@@ -35,7 +35,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     package_data={
         'mk': ['*.txt'],
-    },
+    },  
     python_requires='>=3.11',
     install_requires=requirements,
     entry_points={
