@@ -2,9 +2,9 @@
 import asyncio
 import os
 import sys
-import time
 from mk.mp3_util import MP3,ID3
 from mutagen import File
+from mutagen.mp3 import MP3 as mutagen_mp3
 from yt_dlp import  YoutubeDL
 import  soundcloud
 from rich.console import Console
@@ -12,6 +12,15 @@ from rich import print
 from bilibili_api import search as bilibili_search
 import difflib
 
+# 支持的模型列表
+SUPPORT_MODELS = [
+    'UVR_MDXNET_Main',
+    'UVR-MDX-NET-Inst_Main',
+    'UVR-MDX-NET-Inst_3',
+    'UVR-MDX-NET-Inst_HQ_3',
+    'UVR_MDXNET_KARA_2',
+    'Kim_Inst'
+]
 
 console = Console()
 
@@ -158,7 +167,11 @@ def clip(path:str,start:str,end:str):
             img_data = audio.tags._DictProxy__dict['APIC:Cover'].data
         except:
             img_data = None
-        command = f'ffmpeg -i {path} -ss {start} -t {end} -acodec copy output.mp3'
+        try:
+            command = f'ffmpeg -i {path} -ss {start} -t {end} -acodec copy output.mp3'
+        except:
+            print('请先安装ffmpeg!')
+            return
         # 执行命令
         os.system(command)
         # 删除原文件
@@ -292,39 +305,69 @@ async def search(name:str):
         
         return result[0]+result[1]
 
+# 提取伴奏
+def extract_accompaniment(mp3path:str,model_name:str=None):
+    if not mp3path.endswith('.mp3'):
+        print('仅支持mp3文件!')
+        return
+    with console.status("[bold green]提取伴奏中...") as status:
+        try:
+            if model_name == None:
+                command = f'audio-separator --model_name="UVR_MDXNET_Main" --output_format=MP3 --single_stem=instrumental {mp3path}'
+            elif model_name in SUPPORT_MODELS:    
+                command = f'audio-separator --model_name={model_name} --output_format=MP3 --single_stem=instrumental {mp3path}'
+            else:
+                print('不支持的模型!')
+                return
+        except:
+            print('请先安装audio-separator!')
+            return
+        # 执行命令
+        os.system(command)
+        sync_meta()
+        console.log(f"提取完成!")
+
 # 同步伴奏元信息
 def sync_meta():
-    with console.status("[bold green]正在同步元信息...") as status:
-        # 遍历当前目录
-        for file in os.listdir('.'):
-            # 判断是否是mp3文件
-            if   file.endswith('(Instrumental).mp3'):
+    # 遍历当前目录
+    for file in os.listdir('.'):
+        # 判断是否是mp3文件
+        if   file.endswith('.mp3') and file.__contains__('_(Instrumental)_'):
+            try:
+                # 如果标题存在 说明标签已同步 无需处理
+                MP3(file).songFile['TIT2'].text[0]
+            except:
+                # 获取原文件名 使用UVR软件处理过的音频伴奏命名格式为  `标题_(Instrumental)_UVR模型``
                 try:
-                    # 如果标题存在 说明标签已同步 无需处理
-                    MP3(file).songFile['TIT2'].text[0]
-                except:
-                    # 获取原文件名 使用UVR软件处理过的音频伴奏命名格式为 1_歌曲名_(instrumental).mp3
-                    try:
-                        raw_name = file.split('_')[1]
-                        if raw_name==None or raw_name=='':
-                            continue
-                        # 判断文件raw_name.mp3是否存在
-                        if os.path.exists(f'{raw_name}.mp3'):
-                            source_mp3 = MP3(f'{raw_name}.mp3')
-                            dest_mp3 = MP3(file)
-                            # 将source_mp3的元信息同步到dest_mp3
-                            dest_mp3.add_title(source_mp3.songFile['TIT2'].text[0]+'(instrumental)')
-                            dest_mp3.add_artist(source_mp3.songFile['TPE1'].text[0])
-                            dest_mp3.add_album(source_mp3.songFile['TALB'].text[0])
-                            dest_mp3.add_bytes_cover(source_mp3.songFile['APIC:Cover'].data)
-                            dest_mp3.save()
-                            # 目标文件重命名
-                            os.rename(file,f'{raw_name}(instrumental).mp3')
-                        
-                    except Exception as e:
-                        print(e)
+                    raw_name = file.split('_')[0]
+                    if raw_name==None or raw_name=='':
                         continue
-        console.log(f"同步完成!")    
+                    # 判断文件raw_name.mp3是否存在
+                    if os.path.exists(f'{raw_name}.mp3'):
+                        source_mp3 = MP3(f'{raw_name}.mp3')
+                        # 获取source_mp3的比特率
+                        raw_bitrate = mutagen_mp3(f'{raw_name}.mp3').info.bitrate
+                        # 使用ffmpeg同步目标文件的比特率
+                        try:
+                            os.system(f'ffmpeg  -y -i {file} -acodec libmp3lame -ab  {int(raw_bitrate/1000)}k -ar 48000  {raw_name}_output.mp3')
+                        except:
+                            print('请先安装ffmpeg!')
+                            return
+                        dest_mp3 = MP3(f'{raw_name}_output.mp3')
+                        # 将source_mp3的元信息同步到dest_mp3
+                        dest_mp3.add_title(source_mp3.songFile['TIT2'].text[0]+'(instrumental)')
+                        dest_mp3.add_artist(source_mp3.songFile['TPE1'].text[0])
+                        dest_mp3.add_album(source_mp3.songFile['TALB'].text[0])
+                        dest_mp3.add_bytes_cover(source_mp3.songFile['APIC:Cover'].data)
+                        dest_mp3.save()
+                        # output文件重命名
+                        os.rename(f'{raw_name}_output.mp3',f'{raw_name}(instrumental).mp3')
+                        # 删除目标文件
+                        os.remove(file)
+                    
+                except Exception as e:
+                    print(e)
+                    continue
     
 def main(args=None):
     if args == None:
@@ -333,10 +376,10 @@ def main(args=None):
     if len(args) == 0:
         print('configuration:\n\n'
             '---------------------------------------------\n'+
-            '下载: mk url [title] [cover_url]\n'+
+            '下载: mk url \[title] \[cover_url]\n'+
             '搜索: mk -s name\n'
-            '剪辑: mk -c path start end\n'
-            '元信息同步: mk -m\n'
+            '剪辑: mk -c mp3path start end\n'
+            '提取伴奏: mk -e mp3path \[model_name]\n'
             '---------------------------------------------\n' 
             )
         return
@@ -348,7 +391,6 @@ def main(args=None):
         clip(path,start,end)
     elif flag == '-s':
         name = args[1]
-        
         loop = asyncio.get_event_loop()
         res:list=  loop.run_until_complete(search(name))
         # 打印搜索结果
@@ -377,8 +419,17 @@ def main(args=None):
         if title == '':
             title = None
         download(res[num-1]['url'],title,None)
-    elif  flag == '-m':
-        sync_meta()
+    elif  flag == '-e':
+        try:
+            path = args[1]
+        except:
+            print('请输入mp3文件路径!')
+            return
+        try:
+            model_name = args[2]
+        except:
+            model_name = None
+        extract_accompaniment(path,model_name)
     else:
         # 默认下载
         # 判断flag是否是网址
@@ -434,5 +485,5 @@ if  __name__ == '__main__':
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
-    sync_meta()
+    # sync_meta()
     pass
