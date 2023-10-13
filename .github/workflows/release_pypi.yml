@@ -58,7 +58,7 @@ jobs:
           python setup.py sdist bdist_wheel 
           twine upload dist/*
 
-      # # 生成发行说明
+      # 生成发行说明
       # - name: Generate Release Notes
       #   id: gen_release_notes
       #   uses: actions/github-script@v3
@@ -82,6 +82,61 @@ jobs:
       #   run: |
       #     echo "changelog=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
 
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v4.0.0
+        with:
+          fromTag: ${{ github.event.before }}
+          toTag: ${{ github.event.after }}
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "categories": [
+                  {
+                      "title": "## 🚀 Features",
+                      "labels": ["feat"]
+                  },
+                  {
+                      "title": "## 🐛 Fixes",
+                      "labels": ["fix"]
+                  },
+                  {
+                      "title": "## 📝 Documentation",
+                      "labels": ["docs"]
+                  },
+                  {
+                      "title": "## 🎨 Style",
+                      "labels": ["style"]
+                  },
+                  {
+                      "title": "## 🧰 Refactor",
+                      "labels": ["refactor"]
+                  },
+                  {
+                    "title": "## 🚨 Perf",
+                    "labels": ["perf"]
+                  },
+                  {
+                      "title": "## 🧪 Tests",
+                      "labels": ["test"]
+                  },
+                  {
+                    "title": "## 📦 Build",
+                    "labels": ["build"]
+                  },
+                  {
+                    "title": "## 📦 CI",
+                    "labels": ["ci"]
+                  },
+                  {
+                      "title": "## 📦 Chore",
+                      "labels": ["chore"]
+                  }
+              ]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
       # 创建release
       - name: Create Release
         id: create_release
@@ -92,14 +147,6 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           release_name: v${{ steps.get_version.outputs.version }}
-          # body: ${{steps.build_changelog.outputs.changelog}}
+          body: ${{steps.build_changelog.outputs.changelog}}
           draft: false
           prerelease: false
-
-      # - name: 'Build Changelog'
-      #   id: github_release
-      #   uses: mikepenz/release-changelog-builder-action@v4
-      #   with:
-      #     configuration: 'configs/configuration_repo.json'
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
