@@ -58,28 +58,61 @@ jobs:
           python setup.py sdist bdist_wheel
           twine upload dist/*
 
-      # 生成发行说明
-      - name: Generate Release Notes
-        id: gen_release_notes
-        uses: actions/github-script@v3
+      # # 生成发行说明
+      # - name: Generate Release Notes
+      #   id: gen_release_notes
+      #   uses: actions/github-script@v3
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      #   with:
+      #     script: |
+      #       const compareCommits = await github.repos.compareCommits({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         base: context.payload.before,
+      #         head: context.payload.after
+      #       });
+      #       const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
+      #       return commits.join('\n');
+
+      #   # 将发行说明写入文件 该文件会在后面的步骤中使用
+      # - name: Write Release Notes
+      #   id: write_release_notes
+      #   run: |
+      #     echo "release_notes=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
+
+      - name: 'Build Changelog'
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v4.0.0
+        with:
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "categories": [
+                {
+                    "title": "## 🚀 Features",
+                    "labels": ["feature"]
+                },
+                {
+                    "title": "## 🐛 Fixes",
+                    "labels": ["fix"]
+                },
+                {
+                    "title": "## 🧪 Tests",
+                    "labels": ["test"]
+                },
+                {
+                    "title": "## 💬 Other",
+                    "labels": ["other"]
+                },
+                {
+                    "title": "## 📦 Dependencies",
+                    "labels": ["dependencies"]
+                }
+              ]
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          script: |
-            const compareCommits = await github.repos.compareCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              base: context.payload.before,
-              head: context.payload.after
-            });
-            const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
-            return commits.join('\n');
-
-        # 将发行说明写入文件 该文件会在后面的步骤中使用
-      - name: Write Release Notes
-        id: write_release_notes
-        run: |
-          echo "release_notes=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
 
       # 创建release
       - name: Create Release
@@ -91,6 +124,6 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           release_name: v${{ steps.get_version.outputs.version }}
-          body: ${{ steps.write_release_notes.outputs.release_notes }}
+          body: ${{steps.build_changelog.outputs.changelog}}
           draft: false
           prerelease: false
