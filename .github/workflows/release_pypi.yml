@@ -58,28 +58,29 @@ jobs:
           python setup.py sdist bdist_wheel 
           twine upload dist/*
 
-      # 生成发行说明
-      - name: Generate Release Notes
-        id: gen_release_notes
-        uses: actions/github-script@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          script: |
-            const compareCommits = await github.repos.compareCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              base: context.payload.before,
-              head: context.payload.after
-            });
-            const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
-            return commits.join('\n');
+      # # 生成发行说明
+      # - name: Generate Release Notes
+      #   id: gen_release_notes
+      #   uses: actions/github-script@v3
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      #   with:
+      #     script: |
+      #       const compareCommits = await github.repos.compareCommits({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         base: context.payload.before,
+      #         head: context.payload.after
+      #       });
+      #       # 根据分类生成发行说明
+      #       const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
+      #       return commits.join('\n');
 
-        # 将发行说明写入文件 该文件会在后面的步骤中使用
-      - name: build changelog
-        id: build_changelog
-        run: |
-          echo "changelog=$(echo "${{ steps.gen_release_notes.outputs.result }}" | grep -E '^\- (init|feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?: .{1,50}$')" >> "$GITHUB_OUTPUT"
+      #   # 将发行说明写入文件 该文件会在后面的步骤中使用
+      # - name: build changelog
+      #   id: build_changelog
+      #   run: |
+      #     echo "changelog=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
 
       # 创建release
       - name: Create Release
@@ -91,6 +92,14 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           release_name: v${{ steps.get_version.outputs.version }}
-          body: ${{steps.build_changelog.outputs.changelog}}
+          # body: ${{steps.build_changelog.outputs.changelog}}
           draft: false
           prerelease: false
+
+      # - name: 'Build Changelog'
+      #   id: github_release
+      #   uses: mikepenz/release-changelog-builder-action@v4
+      #   with:
+      #     configuration: 'configs/configuration_repo.json'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
