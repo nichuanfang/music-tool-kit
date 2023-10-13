@@ -11,12 +11,13 @@ setup(
     version='0.6.1',
     description='A tool kit for music download and clip', 
     long_description_content_type='text/markdown', 
-    long_description=readme,
+    long_description=readme,   
     url='https://github.com/nichuanfang/music-tool-kit',   
-    project_urls={
+    
+    project_urls={   
         'Source Code': 'https://github.com/nichuanfang/music-tool-kit',
         'Bug Tracker': 'https://github.com/nichuanfang/music-tool-kit/issues',
-        'Documentation': 'https://github.com/nichuanfang/music-tool-kit#music-tool-kit-%E9%9F%B3%E4%B9%90%E5%B7%A5%E5%85%B7%E7%AE%B1',
+        'Documentation': 'https://github.com/nichuanfang/music-tool-kit#music-tool-kit-%E9%9F%B3%E4%B9%90%E5%B7%A5%E5%85%B7%E7%AE%B1',     
     },
     author='Nichuan Fang',
     author_email='f18326186224@gmail.com',
