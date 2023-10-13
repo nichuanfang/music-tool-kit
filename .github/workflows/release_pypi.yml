@@ -18,13 +18,14 @@ jobs:
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: 3.11.0
+          python-version: 3.8.0
           cache: pip
 
       # 读取setup.py setup方法的版本号
       - name: Get version
         id: get_version
         run: |
+          pip install -U music-tool-kit
           echo "version=$(python setup.py --version)" >> "$GITHUB_OUTPUT"
 
       # 获取pypi的该项目的版本号
