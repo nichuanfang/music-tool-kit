@@ -167,7 +167,7 @@ def clip(path:str,start:str,end:str):
         except:
             img_data = None
         try:
-            command = f'ffmpeg -i {path} -ss {start} -t {end} -acodec copy output.mp3'
+            command = f'ffmpeg -i "{path}" -ss {start} -t {end} -acodec copy output.mp3'
         except:
             print('请先安装ffmpeg!')
             return
@@ -292,9 +292,9 @@ def extract_accompaniment(mp3path:str,model_name:str=None):
     with console.status("[bold green]提取伴奏中...") as status:
         try:
             if model_name == None:
-                command = f'audio-separator --model_name="UVR_MDXNET_Main" --output_format=MP3 --single_stem=instrumental {mp3path}'
+                command = f'audio-separator --model_name="UVR_MDXNET_Main" --output_format=MP3 --single_stem=instrumental "{mp3path}"'
             elif model_name in SUPPORT_MODELS:    
-                command = f'audio-separator --model_name={model_name} --output_format=MP3 --single_stem=instrumental {mp3path}'
+                command = f'audio-separator --model_name={model_name} --output_format=MP3 --single_stem=instrumental "{mp3path}"'
             else:
                 print('不支持的模型!')
                 return
@@ -328,7 +328,7 @@ def sync_meta():
                         raw_bitrate = mutagen_mp3(f'{raw_name}.mp3').info.bitrate
                         # 使用ffmpeg同步目标文件的比特率
                         try:
-                            os.system(f'ffmpeg  -y -i {file} -acodec libmp3lame -ab  {int(raw_bitrate/1000)}k -ar 48000  {raw_name}_output.mp3')
+                            os.system(f'ffmpeg  -y -i "{file}" -acodec libmp3lame -ab  {int(raw_bitrate/1000)}k -ar 48000  "{raw_name}_output.mp3"')
                         except:
                             print('请先安装ffmpeg!')
                             return
