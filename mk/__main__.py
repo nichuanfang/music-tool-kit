@@ -292,9 +292,9 @@ def extract_accompaniment(mp3path:str,model_name:str=None):
     with console.status("[bold green]提取伴奏中...") as status:
         try:
             if model_name == None:
-                command = f'audio-separator --model_name="UVR_MDXNET_Main" --output_format=MP3 --single_stem=instrumental "{mp3path}"'
+                command = f'audio-separator --model_name="UVR_MDXNET_Main" --denoise=False --output_format=MP3 --single_stem=instrumental "{mp3path}"'
             elif model_name in SUPPORT_MODELS:    
-                command = f'audio-separator --model_name={model_name} --output_format=MP3 --single_stem=instrumental "{mp3path}"'
+                command = f'audio-separator --model_name={model_name} --denoise=False --output_format=MP3 --single_stem=instrumental "{mp3path}"'
             else:
                 print('不支持的模型!')
                 return
