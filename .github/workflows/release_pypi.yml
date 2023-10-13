@@ -58,70 +58,29 @@ jobs:
           python setup.py sdist bdist_wheel
           twine upload dist/*
 
-      # # 生成发行说明
-      # - name: Generate Release Notes
-      #   id: gen_release_notes
-      #   uses: actions/github-script@v3
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      #   with:
-      #     script: |
-      #       const compareCommits = await github.repos.compareCommits({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         base: context.payload.before,
-      #         head: context.payload.after
-      #       });
-      #       const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
-      #       return commits.join('\n');
-
-      #   # 将发行说明写入文件 该文件会在后面的步骤中使用
-      # - name: Write Release Notes
-      #   id: write_release_notes
-      #   run: |
-      #     echo "release_notes=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
-
-      # 创建tag
-      # - name: Create Tag
-      #   id: create_tag
-      #   run: |
-      #     git config --local user.email "f18326186224@gmail.com"
-      #     git config --local user.name "jaychouzzz"
-      #     git tag -a v${{ steps.get_version.outputs.version }} -m "v${{ steps.get_version.outputs.version }}"
-      #     git push origin v${{ steps.get_version.outputs.version }}
-
-      - name: 'Build Changelog'
-        id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v4.0.0
-        with:
-          configurationJson: |
-            {
-              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
-              "categories": [
-                {
-                    "title": "## 🚀 Features",
-                    "labels": ["feat"]
-                },
-                {
-                    "title": "## 🐛 Fixes",
-                    "labels": ["fix"]
-                },
-                {
-                    "title": "## 🧪 Tests",
-                    "labels": ["test"]
-                },
-                {
-                    "title": "## 💬 Other",
-                    "labels": ["init","docs","style","build","ci","chore"]
-                },
-                {
-                    "title": "## 📦 Dependencies",
-                    "labels": ["dependencies"]
-                }
-              ]
-            }
+      # 生成发行说明
+      - name: Generate Release Notes
+        id: gen_release_notes
+        uses: actions/github-script@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          script: |
+            const compareCommits = await github.repos.compareCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              base: context.payload.before,
+              head: context.payload.after
+            });
+            const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
+            return commits.join('\n');
+
+        # 将发行说明写入文件 该文件会在后面的步骤中使用
+      - name: build changelog
+        id: build_changelog
+        run: |
+          # 按照提交内容分类
+          echo "changelog=$(echo "${{ steps.gen_release_notes.outputs.result }}" | grep -E '^\- (init|feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?: .{1,50}$')" >> "$GITHUB_OUTPUT"
 
       # 创建release
       - name: Create Release
