@@ -27,7 +27,7 @@ mk  网址 [输出] [封面url]
 mk -s 关键字
 ```
 
-> 支持 youtube bilibili soundcloud ,输出优先级 youtube > bilibili > soundcloud
+> 支持 youtube bilibili 输出优先级 youtube > bilibili
 
 - 音乐剪辑
 

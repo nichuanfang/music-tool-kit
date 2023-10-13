@@ -6,7 +6,6 @@ from mk.mp3_util import MP3,ID3
 from mutagen import File
 from mutagen.mp3 import MP3 as mutagen_mp3
 from yt_dlp import  YoutubeDL
-import  soundcloud
 from rich.console import Console
 from rich import print
 from bilibili_api import search as bilibili_search
@@ -270,24 +269,6 @@ async def search_bilibili(name:str):
     return res
 
 
-# 搜索soundcloud歌曲
-def search_soundcloud(name:str):
-    """搜索歌曲
-
-    Args:
-        name (str): 歌曲名称
-    """ 
-    res = []
-    client = soundcloud.Client(client_id  = 'Qiipt0EkEtDliaaQ2zktLdLcA2cYr8YL')
-    tracks = client.get('/tracks',q=name,limit=4)
-    for track in tracks:
-        res.append({
-            'title': track.title,
-            'url': track.permalink_url
-        })
-    return res
-
-
 # 搜索歌曲
 async def search(name:str):
     """搜索歌曲
@@ -299,8 +280,6 @@ async def search(name:str):
         tasks = [
                 asyncio.create_task(search_youtube(name)), 
                 asyncio.create_task(search_bilibili(name))]
-                # 从soundcloud获取结果  由于近期soundcloud关闭了api接口,所以暂时不支持
-                # asyncio.create_task(search_soundcloud(name))]
         result = await asyncio.gather(*tasks)
         
         return result[0]+result[1]

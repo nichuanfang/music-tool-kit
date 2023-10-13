@@ -1,9 +1,6 @@
-setuptools==57.5.0
 rich==13.6.0
 yt-dlp==2023.10.7
 mutagen==1.47.0
 pillow==10.0.1
-six==1.16.0
-soundcloud==0.5.0
 bilibili-api-python>=16.1.0
 audio-separator==0.8.0
