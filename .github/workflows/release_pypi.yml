@@ -25,7 +25,6 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          pip install -U music-tool-kit
           echo "version=$(python setup.py --version)" >> "$GITHUB_OUTPUT"
 
       # 获取pypi的该项目的版本号
