@@ -102,7 +102,7 @@ jobs:
               "categories": [
                 {
                     "title": "## 🚀 Features",
-                    "labels": ["feature"]
+                    "labels": ["feat"]
                 },
                 {
                     "title": "## 🐛 Fixes",
@@ -114,7 +114,7 @@ jobs:
                 },
                 {
                     "title": "## 💬 Other",
-                    "labels": ["other"]
+                    "labels": ["init","docs","style","build","ci","chore"]
                 },
                 {
                     "title": "## 📦 Dependencies",
