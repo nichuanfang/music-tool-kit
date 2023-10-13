@@ -86,15 +86,15 @@ jobs:
           echo "release_notes=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
 
       # 创建release
-      - name: Create Release
-        id: create_release
-        continue-on-error: true
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          release_name: v${{ steps.get_version.outputs.version }}
-          body: ${{ steps.write_release_notes.outputs.release_notes }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   continue-on-error: true
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      #   with:
+      #     tag_name: v${{ steps.get_version.outputs.version }}
+      #     release_name: v${{ steps.get_version.outputs.version }}
+      #     body: ${{ steps.write_release_notes.outputs.release_notes }}
+      #     draft: false
+      #     prerelease: false
