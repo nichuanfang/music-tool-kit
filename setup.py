@@ -8,7 +8,7 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 
 setup(
     name='music-tool-kit', 
-    version='0.5.3',
+    version='0.5.4',
     description='A tool kit for music download and clip', 
     long_description_content_type='text/markdown', 
     long_description=readme,
@@ -36,7 +36,7 @@ setup(
     package_data={
         'mk': ['*.txt'],
     },
-    require_python='>=3.11.0',
+    python_requires='>=3.11',
     install_requires=requirements,
     entry_points={
         'console_scripts': [
