@@ -81,11 +81,21 @@ jobs:
       #   run: |
       #     echo "release_notes=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
 
+      # 创建tag
+      # - name: Create Tag
+      #   id: create_tag
+      #   run: |
+      #     git config --local user.email "f18326186224@gmail.com"
+      #     git config --local user.name "jaychouzzz"
+      #     git tag -a v${{ steps.get_version.outputs.version }} -m "v${{ steps.get_version.outputs.version }}"
+      #     git push origin v${{ steps.get_version.outputs.version }}
+
       - name: 'Build Changelog'
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v4.0.0
         with:
-          fromTag: v${{ steps.get_version.outputs.version }}
+          fromTag: v${{ steps.get_pypi_version.outputs.version }}
+          # toTag: v${{ steps.get_version.outputs.version }}
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
