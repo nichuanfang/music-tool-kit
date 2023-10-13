@@ -31,12 +31,12 @@ setup(
         'musicclip',
         'musickit',
         'musictoolkit',
-    ],
+    ],                    
     packages=find_packages(exclude=['tests']),
     package_data={
         'mk': ['*.txt'],
     },  
-    python_requires='>=3.11',
+    python_requires='>=3.11',    
     install_requires=requirements,
     entry_points={
         'console_scripts': [
