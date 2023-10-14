@@ -69,19 +69,8 @@ else:
     raise Exception('changelog path is required')
 
 # 读取changelog
-with open(changelog, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-    # 去除第一行
-    if len(lines)<2:
-        raise Exception('changelog is empty')
-    lines = lines[1:]
-    # 写入文件
-    # with open(changelog, 'w', encoding='utf-8') as f:
-    #     for line in lines:
-    #         f.write(line)
-            # 设置输出
-    # lines转字符串
-    core.set_output('changelog', '\n'.join(lines))
+lines = changelog.split('\n')[1:]
+core.set_output('changelog', '\n'.join(lines))
             
     
     #   #📦 Uncategorized 

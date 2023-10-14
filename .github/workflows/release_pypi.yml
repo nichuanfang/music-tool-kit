@@ -75,6 +75,7 @@ jobs:
       - name: Handle changelog
         id: handle_changelog
         run: |
+          echo ${{steps.github_release.outputs.changelog}}
           pip install actions-toolkit
           python changelog.py ${{steps.github_release.outputs.changelog}}
 
