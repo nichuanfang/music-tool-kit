@@ -56,11 +56,12 @@ class MP3:
         # 插入封面
         self.songFile['APIC'] = APIC(  
             encoding=0,
-            mime='image/jpg',
+            mime='image/jpg',  
             type=3,
             desc=u'Cover',
             data=image_data
         )
+        
         print(f'封面{cover_url}添加完成')
         
     # 给mp3文件添加封面
