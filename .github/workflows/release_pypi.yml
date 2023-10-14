@@ -57,9 +57,10 @@ jobs:
           twine upload dist/*
 
       # 提交必须以 feat:  fix:  docs:  style:  refactor:  test:  chore: 为前缀
-      # - uses: 'marvinpinto/action-automatic-releases@latest'
-      #   with:
-      #     repo_token: '${{ secrets.GH_TOKEN }}'
-      #     automatic_release_tag: 'latest'
-      #     draft: true
-      #     title: 'v${{ steps.get_version.outputs.version }}'
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GH_TOKEN }}'
+          automatic_release_tag: 'latest'
+          draft: true
+          prerelease: false
+          title: 'v${{ steps.get_version.outputs.version }}'
