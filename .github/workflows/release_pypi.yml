@@ -21,6 +21,7 @@ jobs:
 
       # 读取setup.py setup方法的版本号
       - name: Get version
+
         id: get_version
         run: |
           echo "version=$(python setup.py --version)" >> "$GITHUB_OUTPUT"
