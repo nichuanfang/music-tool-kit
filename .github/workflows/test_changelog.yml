@@ -12,16 +12,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build Release
-        id: release
-        uses: MatteoCampinoti94/changelog-to-release@v1.0.0
+      - uses: 'marvinpinto/action-automatic-releases@latest'
         with:
-          version-name: 'Unreleased'
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          tag_name: v0.6.8.1
-          name: ${{ steps.release.outputs.title }}
-          body: ${{ steps.release.outputs.body }}
+          repo_token: '${{ secrets.GH_TOKEN }}'
+          automatic_release_tag: 'latest'
+          prerelease: false
+          title: 'Development Build'
+          # files: |
+          #   LICENSE.txt
+          #   *.jar
