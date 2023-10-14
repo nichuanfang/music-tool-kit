@@ -60,6 +60,7 @@ jobs:
           repo_token: '${{ secrets.GH_TOKEN }}'
           automatic_release_tag: 'latest'
           draft: true
+          prerelease: false
           title: 'Development Build'
           files: |
             LICENSE.txt
