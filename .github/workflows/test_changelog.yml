@@ -12,20 +12,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get Tag Name
-        id: tagName
-        uses: olegtarasov/get-tag@v2.1.1
-
       - name: Build Release
         id: release
         uses: MatteoCampinoti94/changelog-to-release@v1.0.0
         with:
-          version-name: ${{ steps.tagName.outputs.tag }}
+          version-name: 'Unreleased'
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GH_TOKEN }}
-          tag_name: ${{ steps.tagName.outputs.tag }}
+          tag_name: v0.6.8.1
           name: ${{ steps.release.outputs.title }}
           body: ${{ steps.release.outputs.body }}

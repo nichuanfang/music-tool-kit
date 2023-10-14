@@ -6,11 +6,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+
 ## Unreleased
 
-<small>[Compare with latest](https://github.com/nichuanfang/music-tool-kit/compare/v0.6.7...HEAD)</small>
+<small>[Compare with latest](https://github.com/nichuanfang/music-tool-kit/compare/v0.6.8...HEAD)</small>
 
 <!-- insertion marker -->
+
+## [v0.6.8](https://github.com/nichuanfang/music-tool-kit/releases/tag/v0.6.8) - 2023-10-13
+
+<small>[Compare with v0.6.7](https://github.com/nichuanfang/music-tool-kit/compare/v0.6.7...v0.6.8)</small>
+
 ## [v0.6.7](https://github.com/nichuanfang/music-tool-kit/releases/tag/v0.6.7) - 2023-10-13
 
 <small>[Compare with v0.6.6](https://github.com/nichuanfang/music-tool-kit/compare/v0.6.6...v0.6.7)</small>
@@ -158,4 +164,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.1.7](https://github.com/nichuanfang/music-tool-kit/releases/tag/v0.1.7) - 2023-10-10
 
 <small>[Compare with first commit](https://github.com/nichuanfang/music-tool-kit/compare/2844e3347a85a87ed8ae8d3fc95b85e96d5c1e4a...v0.1.7)</small>
-
