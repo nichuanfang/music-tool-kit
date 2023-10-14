@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: ReleaseChangelog
         id: ReleaseChangelog
-        uses: nichuanfang/AutoReleaseChangelog@v0.0.5
+        uses: nichuanfang/AutoReleaseChangelog@v0.0.6
         with:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           username: zhangsan
