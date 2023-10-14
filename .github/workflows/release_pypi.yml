@@ -65,48 +65,10 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v4.0.0
         with:
           commitMode: true
-          # configurationJson: |
-          #   {
-          #       "categories": [
-          #         {
-          #           "title": "## 🚀 Features",
-          #           "labels": [
-          #             "feature","feat"
-          #           ]
-          #         },
-          #         {
-          #           "title": "## 🐛 Fixes",
-          #           "labels": [
-          #             "fix"
-          #           ]
-          #         },
-          #         {
-          #           "title": "## 🧪 Tests",
-          #           "labels": [
-          #             "test"
-          #           ]
-          #         },
-          #         {
-          #           "title": "## 🧪 Tests and some ✨ Magic",
-          #           "labels": [
-          #             "test",
-          #             "magic"
-          #           ],
-          #           "exclude_labels": [
-          #             "no-magic"
-          #           ],
-          #           "exhaustive": true,
-          #           "empty_content": "- no matching PRs",
-          #           "rules": [
-          #             {
-          #               "pattern": "open",
-          #               "on_property": "status",
-          #               "flags": "gu"
-          #             }
-          #           ]
-          #         }
-          #       ]
-          #   }
+          configurationJson: |
+            {
+              "pr_template": "- #{{TITLE}}"
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
