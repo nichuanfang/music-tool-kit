@@ -83,5 +83,5 @@ jobs:
         with:
           name: ${{ steps.get_version.outputs.version }}
           tag_name: ${{ steps.get_version.outputs.version }}
-          body: ${{steps.github_release.outputs.changelog}}
+          body: ${{steps.handle_changelog.outputs.changelog}}
           token: ${{ secrets.GH_TOKEN }}
