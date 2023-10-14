@@ -1,8 +1,10 @@
 # 推送到pypi
 name: release_to pypi
 
-# 只在setup.py更新时触发
-on: push
+on:
+  push:
+    branches:
+      - 'main'
 
 jobs:
   release_to:
