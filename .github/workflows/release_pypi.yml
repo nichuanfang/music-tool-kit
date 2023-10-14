@@ -67,72 +67,35 @@ jobs:
           commitMode: true
           configurationJson: |
             {
-              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "pr_template": "- #{{TITLE}}",
+              "template": '#{{CHANGELOG}}',
               "categories": [
-                  {
-                      "title": "## 🚀 Features",
-                      "labels": [
-                          "feat",
-                          "feature"
-                      ]
-                  },
-                  {
-                      "title": "## 🐛 Fixes",
-                      "labels": [
-                          "fix",
-                          "bug"
-                      ]
-                  },
-                  {
-                      "title": "## 📝 Documentation",
-                      "labels": [
-                          "docs",
-                      ]
-                  },
-                  {
-                      "title": "## 🎨 Style",
-                      "labels": [
-                          "style",
-                      ]
-                  },
-                  {
-                      "title": "## 🧰 Refactor",
-                      "labels": [
-                          "refactor"
-                      ]
-                  },
-                  {
-                      "title": "## 🚨 Perf",
-                      "labels": [
-                          "perf"
-                      ]
-                  },
-                  {
-                      "title": "## 🧪 Tests",
-                      "labels": [
-                          "test"
-                      ]
-                  },
-                  {
-                      "title": "## 📦 Build",
-                      "labels": [
-                          "build"
-                      ]
-                  },
-                  {
-                      "title": "## 📦 CI",
-                      "labels": [
-                          "ci"
-                      ]
-                  },
-                  {
-                      "title": "## 📦 Chore",
-                      "labels": [
-                          "chore"
-                      ]
-                  }
-              ]
-            }
+                    {
+                      title: '## 🚀 Features',
+                      labels: ['feat','feature']
+                    },
+                    {
+                      title: '## 🐛 Fixes',
+                      labels: ['fix']
+                    },
+                    {
+                      'title': '## 📝 Documentation',
+                      'labels': ['docs']
+                    },
+                    {
+                      'title': '## 🧰 Performance',
+                      'labels': ['perf']
+                    },
+                    {
+                      title: '## 🧪 Tests',
+                      labels: ['test']
+                    },
+                    {
+                      title: '## 📦 Uncategorized',
+                      labels: []
+                    }
+                ],
+              }
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
