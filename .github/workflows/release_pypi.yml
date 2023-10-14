@@ -72,6 +72,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
+      - name: Handle changelog
+        id: handle_changelog
+        run: |
+          pip install actions-toolkit
+          python changelog.py ${{steps.github_release.outputs.changelog}}
+
       - name: Create Release
         uses: mikepenz/action-gh-release@v0.2.0-a03
         with:
