@@ -1,4 +1,6 @@
 # !/usr/bin/env python3
+import argparse
+import pkg_resources
 import asyncio
 import os
 import sys
@@ -280,9 +282,16 @@ async def search(name:str):
         tasks = [
                 asyncio.create_task(search_youtube(name)), 
                 asyncio.create_task(search_bilibili(name))]
-        result = await asyncio.gather(*tasks)
-        
-        return result[0]+result[1]
+        # 如果出现异常 返回正常的结果 打印异常信息
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        if isinstance(results[0], Exception):
+            return results[1]
+        elif isinstance(results[1], Exception):
+            return results[0]
+        elif isinstance(results[0], list) and isinstance(results[1], list):
+            return []
+        else:
+            return results[0]+results[1]
 
 # 提取伴奏
 def extract_accompaniment(mp3path:str,model_name:str=None):
@@ -459,10 +468,11 @@ if  __name__ == '__main__':
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     # loop = asyncio.get_event_loop()
-    # a=  loop.run_until_complete(search("湖畔街-Falcom Sound Team J.D.K"))
+    # a=  loop.run_until_complete(search("poi洗脑"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
     # sync_meta()
+    # download('https://www.youtube.com/watch?v=iQzB5T_B_iI&list=PLXqdiA7ZTh9XZPoK7mwg5cJgITDR4ZlwP&index=2')
     pass

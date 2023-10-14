@@ -1,0 +1,31 @@
+name: Changelog Test
+
+# 手动触发
+on:
+  workflow_dispatch:
+
+jobs:
+  changelog-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Tag Name
+        id: tagName
+        uses: olegtarasov/get-tag@v2.1.1
+
+      - name: Build Release
+        id: release
+        uses: MatteoCampinoti94/changelog-to-release@v1.0.0
+        with:
+          version-name: ${{ steps.tagName.outputs.tag }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          tag_name: ${{ steps.tagName.outputs.tag }}
+          name: ${{ steps.release.outputs.title }}
+          body: ${{ steps.release.outputs.body }}
