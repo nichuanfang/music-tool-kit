@@ -64,38 +64,49 @@ jobs:
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4.0.0
         with:
-          commitMode: false
+          # commitMode: false
           configurationJson: |
             {
-              "pr_template": "- #{{TITLE}}",
-              "template": '#{{CHANGELOG}}',
-              "categories": [
-                    {
-                      title: '## 🚀 Features',
-                      labels: ['feat','feature']
-                    },
-                    {
-                      title: '## 🐛 Fixes',
-                      labels: ['fix']
-                    },
-                    {
-                      'title': '## 📝 Documentation',
-                      'labels': ['docs']
-                    },
-                    {
-                      'title': '## 🧰 Performance',
-                      'labels': ['perf']
-                    },
-                    {
-                      title: '## 🧪 Tests',
-                      labels: ['test']
-                    },
-                    {
-                      title: '## 📦 Uncategorized',
-                      labels: []
-                    }
-                ],
-              }
+                "categories": [
+                  {
+                    "title": "## 🚀 Features",
+                    "labels": [
+                      "feature","feat"
+                    ]
+                  },
+                  {
+                    "title": "## 🐛 Fixes",
+                    "labels": [
+                      "fix"
+                    ]
+                  },
+                  {
+                    "title": "## 🧪 Tests",
+                    "labels": [
+                      "test"
+                    ]
+                  },
+                  {
+                    "title": "## 🧪 Tests and some ✨ Magic",
+                    "labels": [
+                      "test",
+                      "magic"
+                    ],
+                    "exclude_labels": [
+                      "no-magic"
+                    ],
+                    "exhaustive": true,
+                    "empty_content": "- no matching PRs",
+                    "rules": [
+                      {
+                        "pattern": "open",
+                        "on_property": "status",
+                        "flags": "gu"
+                      }
+                    ]
+                  }
+                ]
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
