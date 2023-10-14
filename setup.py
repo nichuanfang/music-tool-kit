@@ -54,5 +54,6 @@ setup(
         'Topic :: Multimedia :: Sound/Audio',
         'Topic :: Utilities',
     ],
+    
     zip_safe=False
 )
