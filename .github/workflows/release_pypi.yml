@@ -59,9 +59,5 @@ jobs:
         with:
           repo_token: '${{ secrets.GH_TOKEN }}'
           automatic_release_tag: 'latest'
-          draft: true
-          prerelease: false
+          prerelease: true
           title: 'Development Build'
-          files: |
-            LICENSE.txt
-            *.jar
