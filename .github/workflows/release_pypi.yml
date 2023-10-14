@@ -64,7 +64,7 @@ jobs:
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4.0.0
         with:
-          commitMode: true
+          commitMode: false
           configurationJson: |
             {
               "pr_template": "- #{{TITLE}}",
