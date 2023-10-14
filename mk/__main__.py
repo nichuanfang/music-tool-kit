@@ -31,8 +31,9 @@ def  extract_info(url):
     ydl = YoutubeDL(params={
                 'quiet': True,
                 'no_color': True,
-                'extract_flat': True
+                'extract_flat': True  
             })
+    
     info = ydl.extract_info(url, download=False)
     return info
 
