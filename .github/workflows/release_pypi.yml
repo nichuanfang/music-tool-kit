@@ -65,6 +65,74 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v4.0.0
         with:
           commitMode: true
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "categories": [
+                  {
+                      "title": "## 🚀 Features",
+                      "labels": [
+                          "feat",
+                          "feature"
+                      ]
+                  },
+                  {
+                      "title": "## 🐛 Fixes",
+                      "labels": [
+                          "fix",
+                          "bug"
+                      ]
+                  },
+                  {
+                      "title": "## 📝 Documentation",
+                      "labels": [
+                          "docs",
+                      ]
+                  },
+                  {
+                      "title": "## 🎨 Style",
+                      "labels": [
+                          "style",
+                      ]
+                  },
+                  {
+                      "title": "## 🧰 Refactor",
+                      "labels": [
+                          "refactor"
+                      ]
+                  },
+                  {
+                      "title": "## 🚨 Perf",
+                      "labels": [
+                          "perf"
+                      ]
+                  },
+                  {
+                      "title": "## 🧪 Tests",
+                      "labels": [
+                          "test"
+                      ]
+                  },
+                  {
+                      "title": "## 📦 Build",
+                      "labels": [
+                          "build"
+                      ]
+                  },
+                  {
+                      "title": "## 📦 CI",
+                      "labels": [
+                          "ci"
+                      ]
+                  },
+                  {
+                      "title": "## 📦 Chore",
+                      "labels": [
+                          "chore"
+                      ]
+                  }
+              ]
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
