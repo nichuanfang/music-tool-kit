@@ -44,6 +44,7 @@ setup(
             'mk = mk.__main__:main',
         ]
     },
+    
     classifiers=[
         'Development Status :: 1 - Planning',
         'Environment :: Console',
@@ -54,6 +55,5 @@ setup(
         'Topic :: Multimedia :: Sound/Audio',
         'Topic :: Utilities',
     ],
-    
     zip_safe=False
 )
