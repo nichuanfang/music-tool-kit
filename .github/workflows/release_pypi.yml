@@ -53,3 +53,14 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel 
           twine upload dist/*
+
+      # 提交必须以 feat:  fix:  docs:  style:  refactor:  test:  chore: 为前缀
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GH_TOKEN }}'
+          automatic_release_tag: 'latest'
+          prerelease: true
+          title: 'Development Build'
+          files: |
+            LICENSE.txt
+            *.jar
