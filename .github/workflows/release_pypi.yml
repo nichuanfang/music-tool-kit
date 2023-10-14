@@ -62,4 +62,4 @@ jobs:
           repo_token: '${{ secrets.GH_TOKEN }}'
           automatic_release_tag: 'latest'
           prerelease: true
-          title: 'Development Build'
+          title: 'v${{ steps.get_version.outputs.version }}'
