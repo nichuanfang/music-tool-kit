@@ -21,6 +21,13 @@ jobs:
           python-version: 3.11.0
           cache: pip
 
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GH_TOKEN }}'
+          automatic_release_tag: 'latest'
+          prerelease: false
+          title: 'Development Build'
+
       # 读取setup.py setup方法的版本号
       - name: Get version
         id: get_version
