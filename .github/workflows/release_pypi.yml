@@ -11,9 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ReleaseChangelog
-        uses: nichuanfang/AutoReleaseChangelog@v0.0.3
+        id: ReleaseChangelog
+        uses: nichuanfang/AutoReleaseChangelog@v0.0.4
         with:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          username: zhangsan
+          age: 7
+
+      # 打印输出
+      - name: Print output
+        env:
+          res: ${{ steps.ReleaseChangelog.outputs.res }}
+          time: ${{ steps.ReleaseChangelog.outputs.time }}
+        run: |
+          echo $res
+          echo $time
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -60,7 +72,7 @@ jobs:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          python setup.py sdist bdist_wheel 
+          python setup.py sdist bdist_wheel
           twine upload dist/*
 
       # 提交必须以 feat:  fix:  docs:  style:  refactor:  test:  chore: 为前缀
