@@ -68,3 +68,17 @@ jobs:
           title: 'v${{ steps.get_version.outputs.version }}'
           files: |
             dist/*
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v4.0.0
+        with:
+          commitMode: true
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Create Release
+        uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
+        with:
+          body: ${{steps.github_release.outputs.changelog}}
