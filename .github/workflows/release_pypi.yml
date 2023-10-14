@@ -9,6 +9,8 @@ on:
 jobs:
   release_to:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -58,27 +60,18 @@ jobs:
           python setup.py sdist bdist_wheel
           twine upload dist/*
 
-      # 提交必须以 feat:  fix:  docs:  style:  refactor:  test:  chore: 为前缀
-      - uses: 'marvinpinto/action-automatic-releases@latest'
-        with:
-          repo_token: '${{ secrets.GH_TOKEN }}'
-          automatic_release_tag: 'latest'
-          # draft: true
-          prerelease: true
-          title: 'v${{ steps.get_version.outputs.version }}'
-          files: |
-            dist/*
-
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4.0.0
         with:
           commitMode: true
-
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Create Release
-        uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
+        uses: mikepenz/action-gh-release@v0.2.0-a03
         with:
+          name: ${{ steps.get_version.outputs.version }}
+          tag_name: ${{ steps.get_version.outputs.version }}
           body: ${{steps.github_release.outputs.changelog}}
+          token: ${{ secrets.GH_TOKEN }}
