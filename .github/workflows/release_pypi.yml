@@ -21,14 +21,6 @@ jobs:
           python-version: 3.11.0
           cache: pip
 
-      - uses: 'marvinpinto/action-automatic-releases@latest'
-        with:
-          repo_token: '${{ secrets.GH_TOKEN }}'
-          automatic_release_tag: 'latest'
-          prerelease: false
-
-          title: 'Development Build'
-
       # 读取setup.py setup方法的版本号
       - name: Get version
         id: get_version
@@ -66,43 +58,9 @@ jobs:
           python setup.py sdist bdist_wheel 
           twine upload dist/*
 
-      # 生成发行说明
-      - name: Generate Release Notes
-        id: gen_release_notes
-        uses: actions/github-script@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - uses: 'marvinpinto/action-automatic-releases@latest'
         with:
-          script: |
-            const compareCommits = await github.repos.compareCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              base: context.payload.before,
-              head: context.payload.after
-            });
-            const commits = compareCommits.data.commits.map(commit => `- ${commit.commit.message}`);
-            return commits.join('\n');
-
-        # 将发行说明写入文件 该文件会在后面的步骤中使用
-      - name: Write Release Notes
-        id: write_release_notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          RELEASE_NOTES: ${{ steps.gen_release_notes.outputs.result }}
-        run: |
-          echo $RELEASE_NOTES
-          echo "release_notes=${{ steps.gen_release_notes.outputs.result }}" >> "$GITHUB_OUTPUT"
-
-      # 创建release
-      - name: Create Release
-        id: create_release
-        continue-on-error: true
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          release_name: v${{ steps.get_version.outputs.version }}
-          body: ${{ steps.write_release_notes.outputs.release_notes }}
-          draft: false
+          repo_token: '${{ secrets.GH_TOKEN }}'
+          automatic_release_tag: 'v${{ steps.get_version.outputs.version }}'
           prerelease: false
+          title: 'v${{ steps.get_version.outputs.version }}'
