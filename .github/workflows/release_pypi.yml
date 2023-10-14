@@ -2,11 +2,7 @@
 name: release_to pypi
 
 # 只在setup.py更新时触发
-on:
-  push:
-    # 排除v开头的分支
-    branches-ignore:
-      - 'v*'
+on: push
 
 jobs:
   release_to:
@@ -57,25 +53,3 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel 
           twine upload dist/*
-
-      # 提交必须以 feat:  fix:  docs:  style:  refactor:  test:  chore: 为前缀
-      - uses: 'marvinpinto/action-automatic-releases@latest'
-        id: automatic_releases
-        with:
-          repo_token: '${{ secrets.GH_TOKEN }}'
-          automatic_release_tag: latest
-          prerelease: false
-          title: 'Development Build'
-
-      # 发版
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: ${{ steps.get_version.outputs.version }}
-          body: |
-            ${{ steps.automatic_releases.outputs.automatic_releases_tag }}
-          draft: false
-          prerelease: false

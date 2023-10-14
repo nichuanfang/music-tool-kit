@@ -1,0 +1,21 @@
+name: 'tagged-release'
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  tagged-release:
+    name: 'Tagged Release'
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      # 提交必须以 feat:  fix:  docs:  style:  refactor:  test:  chore: 为前缀
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GH_TOKEN }}'
+          prerelease: false
+          files: |
+            LICENSE.txt
+            *.jar
