@@ -65,3 +65,5 @@ jobs:
           draft: true
           prerelease: false
           title: 'v${{ steps.get_version.outputs.version }}'
+          files: |
+            dist/*
