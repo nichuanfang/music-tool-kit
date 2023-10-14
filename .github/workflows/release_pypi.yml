@@ -10,6 +10,11 @@ jobs:
   release_to:
     runs-on: ubuntu-latest
     steps:
+      - name: ReleaseChangelog
+        uses: nichuanfang/AutoReleaseChangelog@v0.0.1
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v2
 
