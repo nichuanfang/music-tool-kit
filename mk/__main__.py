@@ -290,7 +290,7 @@ async def search(name:str):
             return results[1]
         elif isinstance(results[1], Exception):
             return results[0]
-        elif isinstance(results[0], list) and isinstance(results[1], list):
+        elif isinstance(results[0], Exception) and isinstance(results[1], Exception):
             return []
         else:
             return results[0]+results[1]
