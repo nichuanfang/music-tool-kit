@@ -10,19 +10,6 @@ jobs:
   release_to:
     runs-on: ubuntu-latest
     steps:
-      - name: ReleaseChangelog
-        id: ReleaseChangelog
-        uses: nichuanfang/AutoReleaseChangelog@v0.0.7
-        with:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      # 打印输出
-      - name: Print output
-        env:
-          res: ${{ steps.ReleaseChangelog.outputs.changelog }}
-        run: |
-          echo $res
-
       - name: Checkout
         uses: actions/checkout@v2
 
