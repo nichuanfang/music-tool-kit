@@ -9,7 +9,7 @@ from yt_dlp import  YoutubeDL
 from rich.console import Console
 from rich import print
 from bilibili_api import search as bilibili_search
-
+import csv
 import difflib
 
 # 支持的模型列表
@@ -43,7 +43,7 @@ def download(url:str,title:str=None,cover_url:str=None):
         name (str): 歌曲[-歌手]
         cover_url (str, optional): 封面url. Defaults to None.
     """ 
-    with console.status("[bold green]正在下载...\n") as status:
+    with console.status(f"[bold green]正在下载{title if title!=None else ''}...\n") as status:
         # 多平台强制删除temp文件夹
         try:
             # 判断文件夹是否存在
@@ -85,6 +85,9 @@ def download(url:str,title:str=None,cover_url:str=None):
         }
         with YoutubeDL(ydl_opts) as ydl:
             info = extract_info(url)
+            if info == None:
+                console.log(f"{url}解析失败 请检查网址是否正确!")
+                return
             ydl.download([url])
             
         # 解决不规则标题引起的控制台乱码问题
@@ -155,8 +158,59 @@ def download(url:str,title:str=None,cover_url:str=None):
         else:
             os.system('rm -rf temp')
         console.log(f"下载完成!")
+        return info
     
-    
+
+def batch_download(csv_path:str):
+    """批量下载
+
+    Args:
+        csv_path (str): _description_
+    """    
+    with open(csv_path,'r',encoding='utf-8') as f:
+        reader = csv.reader(f)
+        # 去除第一行
+        skiped = True
+        for row in reader:
+            if skiped:
+                skiped = False
+                continue
+            try:
+                url = row[0]
+            except:
+                continue
+            try:
+                title = row[1] if row[1].strip()!='' else None
+            except:
+                title = None
+            try:
+                cover_url = row[2] if row[2].strip()!='' else None
+            except:
+                cover_url = None
+            try:
+                start_time = row[3] if row[3].strip()!='' else None
+            except:
+                start_time = None
+            try:
+                end_time = row[4] if row[4].strip()!='' else None
+            except:
+                end_time = None
+            try:
+                instrumental = row[5] if row[5].strip()!='' else None
+            except:
+                instrumental = 'false'
+            # 下载
+            info = download(url,title,cover_url)
+            if title!=None:
+                title = title.strip().replace('/','').replace('\\','').replace('⧸',' ').replace('⧹',' ').replace('|',' ').replace('?',' ').replace('*',' ')
+            # 剪辑
+            title = info['title']
+            if start_time!=None and end_time!=None:
+                clip(f'{title}.mp3',start_time,end_time)
+            if instrumental == 'true' or instrumental == 'True':
+                # 提取伴奏
+                extract_accompaniment(f'{title}.mp3')
+
 def clip(path:str,start:str,end:str):
     """剪辑音乐
 
@@ -372,6 +426,8 @@ def main(args=None):
             '搜索: mk -s name\n'
             '剪辑: mk -c mp3path start end\n'
             '提取伴奏: mk -e mp3path \[model_name]\n'
+            '生成批量模板: mk -t\n'
+            '批量下载: mk csv_path\n'
             '---------------------------------------------\n' 
             )
         return
@@ -425,8 +481,16 @@ def main(args=None):
         except:
             model_name = None
         extract_accompaniment(path,model_name)
+    elif flag == '-t':
+        # 生成批量模板
+        with open('template.csv','w',encoding='utf-8',newline='') as f:
+            writer = csv.writer(f)
+            # 写入表头  
+            
+            # 下载地址 标题 封面url 开始时间 结束时间 是否生成伴奏(true or false)
+            writer.writerow(['url','title','cover_url','start_time','end_time','instrumental'])
+        print('生成成功!')
     else:
-        # 默认下载
         # 判断flag是否是网址
         if flag.startswith(('http://','https://')):
             url = flag
@@ -448,6 +512,13 @@ def main(args=None):
                 download(url,args[1],args[2])
             else:
                 print('非法参数!')
+        elif flag.endswith('.csv'):
+            # 批量下载
+            # 判断csv文件是否存在
+            if not os.path.exists(flag):
+                print('csv文件不存在!')
+                return
+            batch_download(flag)
         else:
             print('请输入合法的网址!')
             return
@@ -483,5 +554,5 @@ if  __name__ == '__main__':
     # sync_meta()
     # download('https://www.youtube.com/watch?v=lAshc3ubJIw','グーラ領⧸森林')
     # clip('グーラ領⧸森林.mp3','00:00:00','00:00:30')
-    
+    batch_download('test.csv')
     pass

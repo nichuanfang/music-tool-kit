@@ -51,3 +51,17 @@ mk -e 输入的mp3文件 [模型名称]
 4. UVR-MDX-NET-Inst_HQ_3 (整体较好)
 5. UVR_MDXNET_KARA_2 (一般,人声剔除不干净,声音忽高忽低)
 6. Kim_Inst (一般)
+
+- 生成批量下载 csv 模板文件
+
+```bash
+mk -t
+```
+
+- 批量下载
+
+```bash
+mk csv文件
+```
+
+> 格式: 下载 url,标题,封面 url,截取开始时间,截取终止时间,是否生成伴奏(true 或 false)
