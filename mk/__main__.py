@@ -34,6 +34,9 @@ def  extract_info(url):
             })
     
     info = ydl.extract_info(url, download=False)
+    if info == None:
+        console.log(f"{url}解析失败 请检查网址是否正确!")
+        return None
     return info
 
 def download(url:str,title:str=None,cover_url:str=None):
@@ -86,8 +89,14 @@ def download(url:str,title:str=None,cover_url:str=None):
         with YoutubeDL(ydl_opts) as ydl:
             info = extract_info(url)
             if info == None:
-                console.log(f"{url}解析失败 请检查网址是否正确!")
                 return
+            try:
+                url = info['url']
+            except:
+                try:
+                    url = info['webpage_url']
+                except:
+                    print('获取下载地址失败!')
             ydl.download([url])
             
         # 解决不规则标题引起的控制台乱码问题
@@ -494,24 +503,73 @@ def main(args=None):
         # 判断flag是否是网址
         if flag.startswith(('http://','https://')):
             url = flag
-            if len(args) == 1:
-                download(url,None,None)
-            elif len(args) == 2:
-                title_or_url = args[1]
-                if title_or_url.startswith(('http://','https://')):
-                    download(url,None,title_or_url)
-                else:
-                    download(url,title_or_url,None)
-            elif (len(args) == 3):
-                if args[1].startswith(('http://','https://')):
-                    print('歌曲名称不合法!')
+            # 如果url后面跟着|,  且本身就是一个播放列表 则批量下载 根据|后面的列表序号来筛选 (只对youtube音源有效) 序号之间用,分隔
+            if url.__contains__('youtube.com') and url.find('|') != -1 and url.find('list=') != -1:
+                raw_url = url.split('|')[0]
+                info = extract_info(raw_url)
+                list_url  = info['url'] if info['url']!=None else info['webpage_url']
+                if raw_url.__contains__('v='):
+                    info = extract_info(list_url)
+                # 获取entries
+                entries = info['entries']
+                if len(entries)==0:
+                    print('列表为空!')
                     return
-                if not args[2].startswith(('http://','https://')):
-                    print('封面url不合法!')
-                    return
-                download(url,args[1],args[2])
+                indexs = url.split('|')[1].split(',')
+                if len(indexs) == 0:
+                    # 下载全部
+                    for entry in entries:
+                        try:
+                            url = entry['url']
+                        except:
+                            try:
+                                url = entry['webpage_url']
+                            except:
+                                print('获取下载地址失败!')
+                                continue
+                        download(url)
+                        return
+                for index in indexs:
+                    try:
+                        index = int(index.strip())
+                        if index>len(entries) or index<=0:
+                            print('序号不合法!')
+                            continue
+                        entry = entries[index-1]
+                        # 下载
+                        try:
+                            url = entry['url']
+                        except:
+                            try:
+                                url = entry['webpage_url']
+                            except:
+                                print('获取下载地址失败!')
+                                continue
+                        download(url)
+                    except Exception as e:
+                        continue   
             else:
-                print('非法参数!')
+                # 不下载列表 去掉列表后缀
+                if  url.__contains__('youtube.com') and url.find('list=') != -1 and url.find('v=') != -1:
+                    url = url.split('&')[0]
+                if len(args) == 1:
+                    download(url,None,None)
+                elif len(args) == 2:
+                    title_or_url = args[1]
+                    if title_or_url.startswith(('http://','https://')):
+                        download(url,None,title_or_url)
+                    else:
+                        download(url,title_or_url,None)
+                elif (len(args) == 3):
+                    if args[1].startswith(('http://','https://')):
+                        print('歌曲名称不合法!')
+                        return
+                    if not args[2].startswith(('http://','https://')):
+                        print('封面url不合法!')
+                        return
+                    download(url,args[1],args[2])
+                else:
+                    print('非法参数!')
         elif flag.endswith('.csv'):
             # 批量下载
             # 判断csv文件是否存在
@@ -552,7 +610,9 @@ if  __name__ == '__main__':
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
     # sync_meta()
-    # download('https://www.youtube.com/watch?v=lAshc3ubJIw','グーラ領⧸森林')
+    # download('https://www.youtube.com/watch?v=6MFSHrX5swY')
     # clip('グーラ領⧸森林.mp3','00:00:00','00:00:30')
-    batch_download('test.csv')
+    # batch_download('test.csv')
+    # info = extract_info('https://www.youtube.com/playlist?list=PL68LFSU9iLnC3YSNDqfy3x-1uF8czx33c')
+    # print(info)
     pass
