@@ -6,7 +6,9 @@ music-tool-kit，主要使用场景为提取[youtube](https://www.youtube.com)�
 >
 > 本项目仅为个人使用,无任何商业用途,仅支持 mp3 格式的音乐
 
-## 安装
+## 环境准备
+
+### 安装
 
 ```bash
 pip install -U music-tool-kit
@@ -15,6 +17,18 @@ pip install -U music-tool-kit
 ![help](example/help.png)
 
 > Tips: python 版本: 3.11.0 及以上,需安装 ffmpeg
+
+### 升级
+
+```bash
+pip install -U music-tool-kit
+```
+
+### 卸载
+
+```bash
+pip uninstall music-tool-kit
+```
 
 ## 使用
 

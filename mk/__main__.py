@@ -218,10 +218,12 @@ def batch_download(csv_path:str):
             if  url.__contains__('youtube.com') and url.find('list=') != -1 and url.find('v=') != -1:
                 url = url.split('&')[0]
             info = download(url,title,cover_url)
-            if title!=None:
-                title = title.strip().replace('/','').replace('\\','').replace('⧸',' ').replace('⧹',' ').replace('|',' ').replace('?',' ').replace('*',' ')
             # 剪辑
             title = info['title']
+            if title!=None:
+                title = title.strip().replace('/','').replace('\\','').replace('⧸',' ').replace('⧹',' ').replace('|',' ').replace('?',' ').replace('*',' ')
+            else:
+                continue
             if start_time!=None and end_time!=None:
                 clip(f'{title}.mp3',start_time,end_time)
             if instrumental == 'true' or instrumental == 'True':
