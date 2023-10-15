@@ -84,8 +84,7 @@ jobs:
           verbose: true
 
       # 提交changelog.md
-      - name: test
-        run: echo "${{ steps.gen_release_notes.outputs.changelog }}"
+      - uses: stefanzweifel/git-auto-commit-action@v5
 
       # 创建release
       # - name: Create Release
