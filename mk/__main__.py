@@ -62,9 +62,9 @@ def download(url:str,title:str=None,cover_url:str=None):
             if title.find('(') != -1 and title.endswith(')') and len(title.split('(')[1].split(')')[0])!=0:
                 # 去除专辑格式
                 album = title.split('(')[1].split(')')[0]
-                title = title.rsplit('(',1)[0].strip().replace('/','').replace('\\','').replace('|','').replace('?','').replace('*','')
+                title = title.rsplit('(',1)[0].strip().replace('/','⧸').replace('\\','⧸').replace('|','⧸').replace('?','').replace('*','')
             else:
-                title = title.strip().replace('/','').replace('\\','').replace('|','').replace('?','').replace('*','')
+                title = title.strip().replace('/','⧸').replace('\\','⧸').replace('|','⧸').replace('?','').replace('*','')
             outtmpl = f'{title}.%(ext)s'
         else:
             outtmpl = '%(title)s.%(ext)s'
