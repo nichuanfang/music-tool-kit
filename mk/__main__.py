@@ -507,7 +507,15 @@ def main(args=None):
             if url.__contains__('youtube.com') and url.find('|') != -1 and url.find('list=') != -1:
                 raw_url = url.split('|')[0]
                 info = extract_info(raw_url)
-                list_url  = info['url'] if info['url']!=None else info['webpage_url']
+                try:
+                    list_url  = info['url'] if info['url']!=None else info['webpage_url']
+                except:
+                    try:
+                        list_url = info['webpage_url']
+                    except:
+                        print('获取列表地址失败!')
+                        return
+                    
                 if raw_url.__contains__('v='):
                     info = extract_info(list_url)
                 # 获取entries
