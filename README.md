@@ -16,18 +16,18 @@ pip install -U music-tool-kit
 - 音乐下载
 
 ```bash
-mk  网址 [输出] [封面url]
+mk  "网址" [输出] "[封面url]"
 
 ```
 
 1. 输出格式为 歌曲名-歌手(专辑名) 输出歌曲格式为 mp3 可选, 封面 url 也可选
 
-2. 支持下载 youtube 的列表 使用方法为 `mk 列表url | 列表序号` url 需要为 youtube 的列表 url 序号之间需要用逗号分隔 如果想下载全部歌曲 直接输入 `mk 列表url |` 即可!例如: `mk https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5`
+2. 支持下载 youtube 的列表 使用方法为 `mk "列表url | 列表序号"` url 需要为 youtube 的列表 url 序号之间需要用逗号分隔 如果想下载全部歌曲 直接输入 `mk "列表url |"` 即可!例如: `mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"`
 
 - 音乐搜索
 
 ```bash
-mk -s 关键字
+mk -s "关键字"
 ```
 
 支持 youtube bilibili 输出优先级 youtube > bilibili
@@ -35,7 +35,7 @@ mk -s 关键字
 - 音乐剪辑
 
 ```bash
-mk -c 输入的mp3文件 开始时间 结束时间
+mk -c "输入的mp3文件" 开始时间 结束时间
 ```
 
 时间格式为: 00:00:00
@@ -43,7 +43,7 @@ mk -c 输入的mp3文件 开始时间 结束时间
 - 提取伴奏
 
 ```bash
-mk -e 输入的mp3文件 [模型名称]
+mk -e "输入的mp3文件" [模型名称]
 ```
 
 支持的模型:
@@ -64,7 +64,7 @@ mk -t
 - 批量下载
 
 ```bash
-mk csv文件
+mk "csv文件"
 ```
 
 格式: `下载 url,标题,封面 url,截取开始时间,截取终止时间,是否生成伴奏(true 或 false)`
