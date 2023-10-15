@@ -304,7 +304,7 @@ async def search_youtube(name:str):
         info = None
         for i in range(10):
             try:
-                info = ydl.extract_info(f'ytsearch{search_count}:{name}', download=False,process=False,force_generic_extractor=True)
+                info = ydl.extract_info(f'ytsearch{search_count}:{name}', download=False)
                 break
             except Exception as e:
                 search_count = search_count-1
