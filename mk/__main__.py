@@ -481,5 +481,7 @@ if  __name__ == '__main__':
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
     # sync_meta()
-    # download('https://www.youtube.com/watch?v=lAshc3ubJIw','グーラ領/森林')
+    # download('https://www.youtube.com/watch?v=lAshc3ubJIw','グーラ領⧸森林')
+    # clip('グーラ領⧸森林.mp3','00:00:00','00:00:30')
+    
     pass
