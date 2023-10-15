@@ -226,9 +226,9 @@ async def search_youtube(name:str):
         }],
     }
     with YoutubeDL(ydl_opts) as ydl:
-        # 搜索10条结果
-        info = ydl.extract_info(f'ytsearch10:{name}', download=False)
-        for i in range(10):
+        # 搜索7条结果
+        info = ydl.extract_info(f'ytsearch7:{name}', download=False)
+        for i in range(7):
             try:
                 title = info['entries'][i]['title']
                 url = info['entries'][i]['webpage_url']
@@ -243,9 +243,6 @@ async def search_youtube(name:str):
     #     res[i]['similarity'] = get_similarity(name,res[i]['title'])
     
     # res.sort(key=lambda x:x['similarity'],reverse=True)
-    # # 最多只取5条数据
-    # if len(res)>5:
-    #     res = res[:5]
     
     return res
 
@@ -254,7 +251,7 @@ async def search_bilibili(name:str):
     result = search['result']
     res = []
     for i in range(len(result)):
-        if i == 10:
+        if i == 7:
             break
         # 去除<em class="keyword"></em>正则匹配格式
         title = result[i]['title'].replace('<em class="keyword">','').replace('</em>','').replace('&#39;', '\'')
@@ -268,9 +265,6 @@ async def search_bilibili(name:str):
     
     # res.sort(key=lambda x:x['similarity'],reverse=True)
     
-    # # 最多只取5条数据
-    # if len(res)>5:
-    #     res = res[:5]
     return res
 
 
