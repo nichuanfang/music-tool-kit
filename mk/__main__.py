@@ -46,7 +46,23 @@ def download(url:str,title:str=None,cover_url:str=None):
         name (str): 歌曲[-歌手]
         cover_url (str, optional): 封面url. Defaults to None.
     """ 
-    with console.status(f"[bold green]正在下载{title if title!=None else ''}...\n") as status:
+    info = extract_info(url)
+    if info == None:
+        return
+    try:
+        url = info['url']
+    except:
+        try:
+            url = info['webpage_url']
+        except:
+            print('获取下载地址失败!')
+            return
+    try:
+        download_title = info['title']
+    except:
+        print('获取标题失败!')
+        return
+    with console.status(f"[bold green]正在下载{download_title}...\n") as status:
         # 多平台强制删除temp文件夹
         try:
             # 判断文件夹是否存在
@@ -87,16 +103,6 @@ def download(url:str,title:str=None,cover_url:str=None):
             }],
         }
         with YoutubeDL(ydl_opts) as ydl:
-            info = extract_info(url)
-            if info == None:
-                return
-            try:
-                url = info['url']
-            except:
-                try:
-                    url = info['webpage_url']
-                except:
-                    print('获取下载地址失败!')
             ydl.download([url])
             
         # 解决不规则标题引起的控制台乱码问题
