@@ -13,7 +13,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v2
@@ -64,8 +64,8 @@ jobs:
         with:
           options: --token ${{ secrets.GH_TOKEN }}
 
-      - name: Printing changelog
-        run: cat CHANGELOG.md
+      # 提交changelog.md
+      - uses: stefanzweifel/git-auto-commit-action@v5
 
       # 创建release
       # - name: Create Release
