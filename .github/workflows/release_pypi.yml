@@ -59,16 +59,10 @@ jobs:
       #     python setup.py sdist bdist_wheel
       #     twine upload dist/*
 
-      - name: Write Release Notes
-        id: write_release_notes
-        run: |
-          pip install git-changelog
-          pip install actions-toolkit
-          python changelog_gen.py
-
-      - name: test Notes
-        run: |
-          echo ${{ steps.write_release_notes.outputs.compare }}
+      - name: This works as an Interface to generate CHANGELOG.md using github-changelog-generator
+        uses: saulfm08/github-action-changelog-generator@latest
+        with:
+          options: --token ${{ secrets.GH_TOKEN }}
 
       # 创建release
       # - name: Create Release
