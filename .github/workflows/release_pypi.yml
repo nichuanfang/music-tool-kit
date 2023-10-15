@@ -64,6 +64,10 @@ jobs:
         with:
           options: --token ${{ secrets.GH_TOKEN }}
 
+      - name: test
+        run: |
+          cat /github/workspace/CHANGELOG.md
+
       # 创建release
       # - name: Create Release
       #   id: create_release
