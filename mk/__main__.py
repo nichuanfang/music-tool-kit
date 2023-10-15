@@ -215,6 +215,8 @@ def batch_download(csv_path:str):
             except:
                 instrumental = 'false'
             # 下载
+            if  url.__contains__('youtube.com') and url.find('list=') != -1 and url.find('v=') != -1:
+                url = url.split('&')[0]
             info = download(url,title,cover_url)
             if title!=None:
                 title = title.strip().replace('/','').replace('\\','').replace('⧸',' ').replace('⧹',' ').replace('|',' ').replace('?',' ').replace('*',' ')
@@ -624,7 +626,7 @@ if  __name__ == '__main__':
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
     # sync_meta()
-    # download('https://www.youtube.com/watch?v=6MFSHrX5swY')
+    download('https://www.youtube.com/watch?v=DxYI7nngKFs&list=RDMWPm4Tm-1TI&index=7')
     # clip('グーラ領⧸森林.mp3','00:00:00','00:00:30')
     # batch_download('test.csv')
     # info = extract_info('https://www.youtube.com/playlist?list=PL68LFSU9iLnC3YSNDqfy3x-1uF8czx33c')
