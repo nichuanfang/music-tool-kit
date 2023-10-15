@@ -63,7 +63,7 @@ jobs:
 
         uses: saulfm08/github-action-changelog-generator@latest
         with:
-          options: --token ${{ secrets.GH_TOKEN }} --add-sections '{"documentation":{"prefix":"**Documentation updates:**","labels":["docs"]},"feature":{"prefix":"**Features:**","labels":["feat"]}}'
+          options: --token ${{ secrets.GH_TOKEN }} --add-sections '{"documentation":{"prefix":"**Documentation updates:**","labels":["docs"]}}'
 
       # 提交changelog.md
       - uses: stefanzweifel/git-auto-commit-action@v5
