@@ -59,32 +59,36 @@ jobs:
       #     python setup.py sdist bdist_wheel
       #     twine upload dist/*
 
-      - name: Generate release changelog
-        uses: heinrichreimer/github-changelog-generator-action@master
-        id: gen_release_notes
+      - name: '✏️ Generate full changelog'
+        id: generate-full-changelog
+        uses: ./
         with:
           token: ${{ secrets.GH_TOKEN }}
-          excludeTags: 'latest'
-          breakingLabel: 'Breaking Changes'
-          breakingLabels: 'bump: major'
-          enhancementLabel: 'feat'
-          # enhancementLabels: 'bump: minor'
-          bugsLabel: 'fix'
-          # bugLabels: 'bump: patch'
-          excludeLabels: 'Release'
-          issues: false
-          issuesWoLabels: false
-          maxIssues: 100
+          headerLabel: '# 📑 Changelog'
+          breakingLabel: '### 💥 Breaking'
+          enhancementLabel: '### 🚀 Enhancements'
+          bugsLabel: '### 🐛 Bug fixes'
+          deprecatedLabel: '### ⚠️ Deprecations'
+          removedLabel: '### 🔥 Removals'
+          securityLabel: '### 🛡️ Security'
+          issuesLabel: '### 📁 Other issues'
+          prLabel: '### 📁 Other pull requests'
+          addSections: '{"documentation":{"prefix":"### 📖 Documentation","labels":["docs","documentation"]},"tests":{"prefix":"### ✅ Testing","labels":["test","tests"]}}'
+          issues: true
+          issuesWoLabels: true
           pullRequests: true
-          prWoLabels: false
+          prWoLabels: true
           author: true
           unreleased: true
           compareLink: true
           stripGeneratorNotice: true
           verbose: true
 
-      # 提交changelog.md
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: '🖨️ Print changelog to console'
+        run: cat CHANGELOG.md
+
+      - name: '📤 commit'
+        uses: stefanzweifel/git-auto-commit-action@v5
 
       # 创建release
       # - name: Create Release
