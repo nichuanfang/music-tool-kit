@@ -60,6 +60,7 @@ jobs:
       #     twine upload dist/*
 
       - name: This works as an Interface to generate CHANGELOG.md using github-changelog-generator
+
         uses: saulfm08/github-action-changelog-generator@latest
         with:
           options: --token ${{ secrets.GH_TOKEN }} --add-sections '{"documentation":{"prefix":"**Documentation updates:**","labels":["docs"]},"feature":{"prefix":"**Features:**","labels":["feat"]}}'
