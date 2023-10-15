@@ -59,14 +59,33 @@ jobs:
       #     python setup.py sdist bdist_wheel
       #     twine upload dist/*
 
-      - name: This works as an Interface to generate CHANGELOG.md using github-changelog-generator
-
-        uses: saulfm08/github-action-changelog-generator@latest
+      - name: Generate release changelog
+        uses: heinrichreimer/github-changelog-generator-action@master
+        id: gen_release_notes
         with:
-          options: --token ${{ secrets.GH_TOKEN }} --add-sections '{"documentation":{"prefix":"**Documentation updates:**","labels":["docs"]}}'
+          token: ${{ secrets.GH_TOKEN }}
+          excludeTags: 'latest'
+          breakingLabel: 'Breaking Changes'
+          breakingLabels: 'bump: major'
+          enhancementLabel: 'feat'
+          # enhancementLabels: 'bump: minor'
+          bugsLabel: 'fix'
+          # bugLabels: 'bump: patch'
+          excludeLabels: 'Release'
+          issues: false
+          issuesWoLabels: false
+          maxIssues: 100
+          pullRequests: true
+          prWoLabels: false
+          author: true
+          unreleased: true
+          compareLink: true
+          stripGeneratorNotice: true
+          verbose: true
 
       # 提交changelog.md
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: test
+        run: echo "${{ steps.gen_release_notes.outputs.changelog }}"
 
       # 创建release
       # - name: Create Release
