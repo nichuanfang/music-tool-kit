@@ -117,8 +117,10 @@ mk -t
 mk "csv文件"
 ```
 
+![csv_download](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/csv_download.png)
+
 > Tips: 格式为 `下载 url,标题,封面 url,截取开始时间,截取终止时间,是否生成伴奏(true 或 false)`
 
 ## License
 
-This work is released under the MIT license. A copy of the license is provided in the [LICENSE](./LICENSE) file.
+This work is released under the MIT license. A copy of the license is provided in the [LICENSE](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/LICENSE) file.
