@@ -1,6 +1,6 @@
 # music-tool-kit 音乐工具箱
 
-music-tool-kit，主要使用场景为提取youtube和bilibili视频中的音频,支持音频下载,音频截取,提取伴奏,youtube列表批量下载等.
+music-tool-kit，主要使用场景为提取[youtube](https://www.youtube.com)和[bilibili](https://www.bilibili.com)视频中的音频,支持音频下载,音频截取,提取伴奏,youtube列表批量下载等.
 > **Note**
 >
 > 本项目仅为个人使用,无任何商业用途,仅支持mp3格式的音乐
@@ -24,7 +24,7 @@ mk  "网址" [输出] "[封面url]"
 
 - 输出格式为 歌曲名-歌手(专辑名) 输出歌曲格式为 mp3 可选, 封面 url 也可选
 
-- 支持下载 youtube 的列表 使用方法为 `mk "列表url | 列表序号"` url 需要为 youtube 的列表 url 序号之间需要用逗号分隔 如果想下载全部歌曲 直接输入 `mk "列表url |"` 即可!例如: `mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"`
+- 支持下载 youtube 的列表 使用方法为 `mk "列表url | 列表序号"` url 需要为 [youtube](https://www.youtube.com) 的列表 url 序号之间需要用逗号分隔 如果想下载全部歌曲 直接输入 `mk "列表url |"` 即可!例如: `mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"`
 
 ### 音乐搜索
 
