@@ -1,6 +1,4 @@
 # !/usr/bin/env python3
-import argparse
-import pkg_resources
 import asyncio
 import os
 import sys
@@ -58,12 +56,15 @@ def download(url:str,title:str=None,cover_url:str=None):
         except:
             pass
         album = None
+        raw_title = title
         if title != None:
             # 判断是否有专辑
             if title.find('(') != -1 and title.endswith(')') and len(title.split('(')[1].split(')')[0])!=0:
                 # 去除专辑格式
                 album = title.split('(')[1].split(')')[0]
-                title = title.rsplit('(',1)[0]
+                title = title.rsplit('(',1)[0].strip().replace('/','').replace('\\','').replace('|','').replace('?','').replace('*','')
+            else:
+                title = title.strip().replace('/','').replace('\\','').replace('|','').replace('?','').replace('*','')
             outtmpl = f'{title}.%(ext)s'
         else:
             outtmpl = '%(title)s.%(ext)s'
@@ -93,15 +94,15 @@ def download(url:str,title:str=None,cover_url:str=None):
         # 获取mp3文件路径
         mp3_path = os.path.join('temp',mp3s[0])
         mp3 = MP3(mp3_path)
-        if  title != None:
-            if title.find('-') != -1:
+        if  raw_title != None:
+            if raw_title.find('-') != -1:
                 if album!=None:
                     mp3.add_album(album)
-                    song = title.rsplit('-',1)[0].rsplit('(',1)[0]
+                    song = raw_title.rsplit('-',1)[0].rsplit('(',1)[0]
                 else:
-                    song = title.rsplit('-',1)[0]
-                    mp3.add_album(title)
-                artist = title.split('-')[1]
+                    song = raw_title.rsplit('-',1)[0]
+                    mp3.add_album(raw_title)
+                artist = raw_title.split('-')[1]
                 # 前后去空串
                 mp3.add_title(song.replace('?','').replace('#',''))
                 mp3.add_artist(artist)
@@ -110,10 +111,10 @@ def download(url:str,title:str=None,cover_url:str=None):
                     mp3.add_album(album)
                 else:
                     if 'uploader' in info:
-                        mp3.add_album(f'{title}-{info["uploader"]}')
+                        mp3.add_album(f'{raw_title}-{info["uploader"]}')
                     else:
-                        mp3.add_album(title+'-Unknown Artist')
-                mp3.add_title(title.replace('?','').replace('#',''))
+                        mp3.add_album(raw_title+'-Unknown Artist')
+                mp3.add_title(raw_title.replace('?','').replace('#',''))
                 if 'uploader' in info:
                     mp3.add_artist(info['uploader'])
                 else:
@@ -238,13 +239,13 @@ async def search_youtube(name:str):
             except:
                 break
     # 根据相似度get_similarity重新排序res 
-    for i in range(len(res)):
-        res[i]['similarity'] = get_similarity(name,res[i]['title'])
+    # for i in range(len(res)):
+    #     res[i]['similarity'] = get_similarity(name,res[i]['title'])
     
-    res.sort(key=lambda x:x['similarity'],reverse=True)
-    # 最多只取5条数据
-    if len(res)>5:
-        res = res[:5]
+    # res.sort(key=lambda x:x['similarity'],reverse=True)
+    # # 最多只取5条数据
+    # if len(res)>5:
+    #     res = res[:5]
     
     return res
 
@@ -262,14 +263,14 @@ async def search_bilibili(name:str):
             'url': result[i]['arcurl']
         })
     # 根据相似度get_similarity重新排序res 
-    for i in range(len(res)):
-        res[i]['similarity'] = get_similarity(name,res[i]['title'])
+    # for i in range(len(res)):
+    #     res[i]['similarity'] = get_similarity(name,res[i]['title'])
     
-    res.sort(key=lambda x:x['similarity'],reverse=True)
+    # res.sort(key=lambda x:x['similarity'],reverse=True)
     
-    # 最多只取5条数据
-    if len(res)>5:
-        res = res[:5]
+    # # 最多只取5条数据
+    # if len(res)>5:
+    #     res = res[:5]
     return res
 
 
@@ -281,6 +282,7 @@ async def search(name:str):
         name (str): 歌曲名称
     """ 
     with console.status("[bold green]搜索中...") as status:
+        
         tasks = [
                 asyncio.create_task(search_youtube(name)), 
                 asyncio.create_task(search_bilibili(name))]
@@ -358,7 +360,7 @@ def sync_meta():
                 except Exception as e:
                     print(e)
                     continue
-    
+
 def main(args=None):
     if args == None:
         args = sys.argv[1:]
@@ -383,6 +385,9 @@ def main(args=None):
         name = args[1]
         loop = asyncio.get_event_loop()
         res:list=  loop.run_until_complete(search(name))
+        if len(res) == 0:
+            print('未搜索到结果!')
+            return
         # 打印搜索结果
         for i in range(len(res)):
             print(f'{i+1}. {res[i]["title"]}')
@@ -470,11 +475,11 @@ if  __name__ == '__main__':
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     # loop = asyncio.get_event_loop()
-    # a=  loop.run_until_complete(search("poi洗脑"))
+    # a=  loop.run_until_complete(search("https://music.163.com/song?id=186004&userid=112911170"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
     # sync_meta()
-    # download('https://www.youtube.com/watch?v=iQzB5T_B_iI&list=PLXqdiA7ZTh9XZPoK7mwg5cJgITDR4ZlwP&index=2')
+    # download('https://www.youtube.com/watch?v=lAshc3ubJIw','グーラ領/森林')
     pass
