@@ -11,6 +11,7 @@ from rich import print
 from bilibili_api import search as bilibili_search
 import csv
 import difflib
+from yt_dlp.utils import DownloadError
 
 # 支持的模型列表
 SUPPORT_MODELS = [
@@ -299,7 +300,17 @@ async def search_youtube(name:str):
     }
     with YoutubeDL(ydl_opts) as ydl:
         # 搜索10条结果
-        info = ydl.extract_info(f'ytsearch10:{name}', download=False)
+        search_count = 10
+        info = None
+        for i in range(10):
+            try:
+                info = ydl.extract_info(f'ytsearch{search_count}:{name}', download=False,process=False,force_generic_extractor=True)
+                break
+            except DownloadError as e:
+                search_count = search_count-1
+                continue
+        if info ==None:
+            return res
         for i in range(10):
             try:
                 title = info['entries'][i]['title']
@@ -621,13 +632,13 @@ if  __name__ == '__main__':
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     # loop = asyncio.get_event_loop()
-    # a=  loop.run_until_complete(search("グーラ領⧸森林"))
+    # a=  loop.run_until_complete(search("萧十一郎"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
     # 获取执行的结果
     # sync_meta()
-    download('https://www.youtube.com/watch?v=DxYI7nngKFs&list=RDMWPm4Tm-1TI&index=7')
+    # download('https://www.youtube.com/watch?v=YudHcBIxlYw&list=RDYudHcBIxlYw&start_radio=1')
     # clip('グーラ領⧸森林.mp3','00:00:00','00:00:30')
     # batch_download('test.csv')
     # info = extract_info('https://www.youtube.com/playlist?list=PL68LFSU9iLnC3YSNDqfy3x-1uF8czx33c')
