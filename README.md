@@ -14,7 +14,7 @@ music-tool-kit，主要使用场景为提取[youtube](https://www.youtube.com)�
 pip install -U music-tool-kit
 ```
 
-![help](example/help.png)
+![help](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/help.png)
 
 > Tips: python 版本: 3.11.0 及以上,需安装 ffmpeg
 
@@ -40,10 +40,10 @@ mk  "网址" [输出] "[封面url]"
 ```
 
 普通下载
-![download ](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/download.png)
+![download](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/download.png)
 
 列表下载
-![download_list](./example/batch_download.png)
+![download_list](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/batch_download.png)
 
 - 输出格式为 **歌曲名-歌手(专辑名)** 输出歌曲格式为 **mp3**
 
@@ -63,7 +63,7 @@ mk  "网址" [输出] "[封面url]"
 mk -s "关键字"
 ```
 
-![search](./example/search.png)
+![search](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/search.png)
 支持 youtube bilibili 输出优先级 youtube > bilibili
 
 ### 音乐剪辑
@@ -72,7 +72,7 @@ mk -s "关键字"
 mk -c "输入的mp3文件" 开始时间 结束时间
 ```
 
-![clip](example/clip.png)
+![clip](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/clip.png)
 
 > Tips: 时间格式为 `00:00:00`
 
@@ -91,7 +91,7 @@ mk -e "输入的mp3文件" [模型名称]
 - `UVR_MDXNET_KARA_2` (一般,人声剔除不干净,声音忽高忽低)
 - `Kim_Inst` (一般)
 
-![extract](example/inst.png)
+![extract](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/inst.png)
 
 > **Note**
 >
@@ -104,7 +104,7 @@ mk -t
 ```
 
 生成的模板文件如下:
-![csv_template](example/csv_template.png)
+![csv_template](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/csv_template.png)
 用户自行填写下载信息,保存后使用`mk "csv文件"`即可批量下载
 
 | url  | title | cover_url | start_time | end_time | instrumental |
