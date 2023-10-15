@@ -40,7 +40,7 @@ mk  "网址" [输出] "[封面url]"
 ```
 
 普通下载
-![download ](./example/download.png)
+![download ](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/download.png)
 
 列表下载
 ![download_list](./example/batch_download.png)
