@@ -62,9 +62,9 @@ def download(url:str,title:str=None,cover_url:str=None):
             if title.find('(') != -1 and title.endswith(')') and len(title.split('(')[1].split(')')[0])!=0:
                 # 去除专辑格式
                 album = title.split('(')[1].split(')')[0]
-                title = title.rsplit('(',1)[0].strip().replace('/','').replace('\\','').replace('|','').replace('?','').replace('*','')
+                title = title.rsplit('(',1)[0].strip().replace('/','').replace('\\','').replace('⧸',' ').replace('⧹',' ').replace('|',' ').replace('?',' ').replace('*',' ')
             else:
-                title = title.strip().replace('/','').replace('\\','').replace('|','').replace('?','').replace('*','')
+                title = title.strip().replace('/','').replace('\\','').replace('⧸',' ').replace('⧹',' ').replace('|',' ').replace('?',' ').replace('*',' ')
             outtmpl = f'{title}.%(ext)s'
         else:
             outtmpl = '%(title)s.%(ext)s'
@@ -282,7 +282,7 @@ async def search(name:str):
         name (str): 歌曲名称
     """ 
     with console.status("[bold green]搜索中...") as status:
-        
+        name = name.replace('⧸','/').replace('⧹','/').replace('⧺','+').replace('⧻','+').replace('⧼','<').replace('⧽','>').replace('⧾','>').replace('⧿','>')
         tasks = [
                 asyncio.create_task(search_youtube(name)), 
                 asyncio.create_task(search_bilibili(name))]
@@ -475,7 +475,7 @@ if  __name__ == '__main__':
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     # loop = asyncio.get_event_loop()
-    # a=  loop.run_until_complete(search("https://music.163.com/song?id=186004&userid=112911170"))
+    # a=  loop.run_until_complete(search("グーラ領⧸森林"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
