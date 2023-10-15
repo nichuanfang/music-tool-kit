@@ -6,7 +6,10 @@ music-tool-kit，主要使用场景为提取[youtube](https://www.youtube.com)�
 >
 > 本项目仅为个人使用,无任何商业用途,仅支持 mp3 格式的音乐
 
+## 内容目录
+
 - [music-tool-kit 音乐工具箱](#music-tool-kit-音乐工具箱)
+  - [内容目录](#内容目录)
   - [环境准备](#环境准备)
     - [安装](#安装)
     - [升级](#升级)
