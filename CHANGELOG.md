@@ -1,4 +1,4 @@
-# Changelog
+# 📑 Changelog
 
 ## [v1.1.0](https://github.com/nichuanfang/music-tool-kit/tree/v1.1.0) (2023-10-15)
 
