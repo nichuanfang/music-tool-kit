@@ -62,7 +62,10 @@ jobs:
       - name: This works as an Interface to generate CHANGELOG.md using github-changelog-generator
         uses: saulfm08/github-action-changelog-generator@latest
         with:
-          options: --token ${{ secrets.GH_TOKEN }} --output
+          options: --token ${{ secrets.GH_TOKEN }}
+
+      - name: Printing changelog
+        run: cat CHANGELOG.md
 
       # 创建release
       # - name: Create Release
