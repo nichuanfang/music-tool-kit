@@ -68,7 +68,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           script: |
-            # 比较上一个版本和当前版本的提交记录
             const compareCommits = await github.repos.compareCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
