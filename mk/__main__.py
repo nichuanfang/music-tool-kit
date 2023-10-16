@@ -297,6 +297,7 @@ async def search_youtube(name:str):
             'preferredcodec': 'mp3',
             'preferredquality': 0
         }],
+        'geo_bypass': True
     }
     with YoutubeDL(ydl_opts) as ydl:
         # 搜索10条结果
@@ -631,8 +632,8 @@ if  __name__ == '__main__':
     # https://soundcloud.com/jeff-kaale/my-heart'
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
-    # loop = asyncio.get_event_loop()
-    # a=  loop.run_until_complete(search("萧十一郎"))
+    loop = asyncio.get_event_loop()
+    a=  loop.run_until_complete(search("萧十一郎"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
