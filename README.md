@@ -33,8 +33,8 @@ pip install -U music-tool-kit
 > **Note**
 >
 > - [python](https://www.python.org/)版本:**3.11.0及以上**
-> - 需安装[ffmpeg](https://ffmpeg.org/)
-> - 如果需要下载youtube的音乐,需要准备**魔法**环境
+> - 需安装[ffmpeg](https://ffmpeg.org/)并正确配置环境变量
+> - 如果需要下载youtube的音乐,需要准备**科学上网**环境
 
 ## 升级
 
