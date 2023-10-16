@@ -1,28 +1,25 @@
-# music-tool-kit 音乐工具箱
-
 music-tool-kit，主要使用场景为提取[youtube](https://www.youtube.com)和[bilibili](https://www.bilibili.com)视频中的音频,支持**音频下载**,**元信息自动补全**,**音频截取**,**提取伴奏**,**youtube 列表批量下载**,**自定义批量下载**等.
 
 > **Note**
 >
 > 本项目仅为个人使用,无任何商业用途,仅支持 mp3 格式的音乐
 
-- [music-tool-kit 音乐工具箱](#music-tool-kit-音乐工具箱)
-  - [环境准备](#环境准备)
-    - [安装](#安装)
-    - [升级](#升级)
-    - [卸载](#卸载)
-  - [使用](#使用)
-    - [音乐下载](#音乐下载)
-    - [音乐搜索](#音乐搜索)
-    - [音乐剪辑](#音乐剪辑)
-    - [提取伴奏](#提取伴奏)
-    - [csv批量模板](#csv批量模板)
-    - [批量下载](#批量下载)
-  - [License](#license)
+- [环境准备](#环境准备)
+  - [安装](#安装)
+  - [升级](#升级)
+  - [卸载](#卸载)
+- [使用](#使用)
+  - [音乐下载](#音乐下载)
+  - [音乐搜索](#音乐搜索)
+  - [音乐剪辑](#音乐剪辑)
+  - [提取伴奏](#提取伴奏)
+  - [csv 批量模板](#csv-批量模板)
+  - [批量下载](#批量下载)
+- [License](#license)
 
-## 环境准备
+# 环境准备
 
-### 安装
+## 安装
 
 ```bash
 pip install -U music-tool-kit
@@ -32,21 +29,21 @@ pip install -U music-tool-kit
 
 > Tips: python 版本: 3.11.0 及以上,需安装 ffmpeg
 
-### 升级
+## 升级
 
 ```bash
 pip install -U music-tool-kit
 ```
 
-### 卸载
+## 卸载
 
 ```bash
 pip uninstall music-tool-kit
 ```
 
-## 使用
+# 使用
 
-### 音乐下载
+## 音乐下载
 
 ```bash
 mk  "网址" [输出] "[封面url]"
@@ -71,7 +68,7 @@ mk  "网址" [输出] "[封面url]"
   >
   > 仅支持下载 youtube 的列表下载,url|后面的列表序号之间需要用逗号分隔
 
-### 音乐搜索
+## 音乐搜索
 
 ```bash
 mk -s "关键字"
@@ -80,7 +77,7 @@ mk -s "关键字"
 ![search](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/search.png)
 支持 youtube bilibili 输出优先级 youtube > bilibili
 
-### 音乐剪辑
+## 音乐剪辑
 
 ```bash
 mk -c "输入的mp3文件" 开始时间 结束时间
@@ -90,7 +87,7 @@ mk -c "输入的mp3文件" 开始时间 结束时间
 
 > Tips: 时间格式为 `00:00:00`
 
-### 提取伴奏
+## 提取伴奏
 
 ```bash
 mk -e "输入的mp3文件" [模型名称]
@@ -111,7 +108,7 @@ mk -e "输入的mp3文件" [模型名称]
 >
 > 默认模型为`UVR_MDXNET_Main`,具体请结合音乐类型和自己的实际听感自行调整模型;伴奏提取比较吃 cpu 性能,时间比较漫长,请耐心等待,大概需要 5~10 分钟
 
-### csv批量模板
+## csv 批量模板
 
 ```bash
 mk -t
@@ -125,7 +122,7 @@ mk -t
 | ---- | ----- | --------- | ---------- | -------- | ------------ |
 | 网址 | 标题  | 封面 url  | 开始时间   | 结束时间 | 是否生成伴奏 |
 
-### 批量下载
+## 批量下载
 
 ```bash
 mk "csv文件"
@@ -135,6 +132,6 @@ mk "csv文件"
 
 > Tips: 格式为 `下载 url,标题,封面 url,截取开始时间,截取终止时间,是否生成伴奏(true 或 false)`
 
-## License
+# License
 
 This work is released under the MIT license. A copy of the license is provided in the [LICENSE](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/LICENSE) file.
