@@ -57,6 +57,10 @@ mk  "网址" [输出] "[封面url]"
 ![download_list](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/batch_download.png)
 
 - 输出格式为 **歌曲名-歌手(专辑名)** 输出歌曲格式为 **mp3**
+  
+  > **Note**
+  >
+  > music-tool-kit会根据标题,自动将下载的音频元信息补全,包括歌曲名,歌手(艺术家),内置封面图片,以及专辑名称.如果不遵循该标题歌手,元信息可能补全失败
 
 - 列表下载使用方法为 `mk "列表url | 列表序号"` ,**url 需要为 [youtube](https://www.youtube.com) 的列表格式**,如果想下载全部歌曲,直接输入 `mk "列表url |"` 即可!
 
