@@ -58,21 +58,17 @@ mk  "网址" [输出] "[封面url]"
 列表下载
 ![download_list](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/batch_download.png)
 
-- 输出格式为 **歌曲名-歌手(专辑名)** 输出歌曲格式为 **mp3**
-  
-  > **Note**
-  >
-  > music-tool-kit会根据标题,自动将下载的音频元信息补全,包括歌曲名,歌手(艺术家),内置封面图片,以及专辑名称.如果不遵循该标题格式,元信息可能补全失败
-
-- 列表下载使用方法为 `mk "列表url | 列表序号"` ,**url 需要为 [youtube](https://www.youtube.com) 的列表格式**,如果想下载全部歌曲,直接输入 `mk "列表url |"` 即可!
+列表下载使用方法为 `mk "列表url | 列表序号"` ,**url 需要为 [youtube](https://www.youtube.com) 的列表格式**,如果想下载全部歌曲,直接输入 `mk "列表url |"` 即可!
 
   ```bash
     mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"
   ```
 
-  > **Note**
-  >
-  > 仅支持下载 youtube 的列表下载,url|后面的列表序号之间需要用逗号分隔
+> **Note**
+>
+> - music-tool-kit会根据标题,自动将下载的音频元信息补全,包括歌曲名,歌手(艺术家),内置封面图片,以及专辑名称.如果不遵循该标题格式,元信息可能补全失败
+> - 输出格式为 **歌曲名-歌手(专辑名)** 输出歌曲格式为 **mp3**
+> - 仅支持下载 youtube 的列表下载,url|后面的列表序号之间需要用逗号分隔
 
 ## 音乐搜索
 
@@ -91,7 +87,9 @@ mk -c "输入的mp3文件" 开始时间 结束时间
 
 ![clip](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/clip.png)
 
-> Tips: 时间格式为 `00:00:00`
+> **Note**
+>
+> 时间格式为 `00:00:00`
 
 ## 提取伴奏
 
@@ -126,7 +124,7 @@ mk -t
 
 | url  | title | cover_url | start_time | end_time | instrumental |
 | ---- | ----- | --------- | ---------- | -------- | ------------ |
-| 网址 | 标题  | 封面 url  | 开始时间   | 结束时间 | 是否生成伴奏 |
+| 网址 | 标题  | 封面 url  | 开始时间   | 结束时间 | 是否生成伴奏(true or false) |
 
 ## 批量下载
 
@@ -135,8 +133,6 @@ mk "csv文件"
 ```
 
 ![csv_download](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/csv_download.png)
-
-> Tips: 格式为 `下载 url,标题,封面 url,截取开始时间,截取终止时间,是否生成伴奏(true 或 false)`
 
 # License
 
