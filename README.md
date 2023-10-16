@@ -58,17 +58,16 @@ mk  "网址" "[标题]" "[封面url]"
 
 ```
 
-普通下载
+**普通下载**
 ![download](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/download.png)
 
-列表下载
+**列表下载**使用方法为 `mk "列表url | 列表序号"` ,**url 需要为 [youtube](https://www.youtube.com) 的列表格式**,如果想下载全部歌曲,直接输入 `mk "列表url |"` 即可!
+
+例如:
+```bash
+mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"
+```
 ![download_list](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/batch_download.png)
-
-列表下载使用方法为 `mk "列表url | 列表序号"` ,**url 需要为 [youtube](https://www.youtube.com) 的列表格式**,如果想下载全部歌曲,直接输入 `mk "列表url |"` 即可!
-
-  ```bash
-    mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"
-  ```
 
 > **Note**
 >
