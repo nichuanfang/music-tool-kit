@@ -24,12 +24,17 @@ music-tool-kit，主要使用场景为提取[youtube](https://www.youtube.com)�
 ## 安装
 
 ```bash
+python -m pip install –upgrade pip
 pip install -U music-tool-kit
 ```
 
 ![help](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/help.png)
 
-> Tips: python 版本: 3.11.0 及以上,需安装 ffmpeg
+> **Note**
+>
+> - [python](https://www.python.org/)版本:**3.11.0及以上**
+> - 需安装[ffmpeg](https://ffmpeg.org/)
+> - 如果需要下载youtube的音乐,需要准备**魔法**环境
 
 ## 升级
 
