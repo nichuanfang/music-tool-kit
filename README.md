@@ -106,7 +106,8 @@ mk -e "输入的mp3文件" [模型名称]
 
 ![extract](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/inst.png)
 
-> Tips: - 默认模型为`UVR_MDXNET_Main`,具体请结合音乐类型和自己的实际听感自行调整模型
+> **Note**
+> - 默认模型为`UVR_MDXNET_Main`,具体请结合音乐类型和自己的实际听感自行调整模型
 > - 伴奏提取比较吃 cpu 性能,时间比较漫长,请耐心等待,大概需要 5~10 分钟
 
 ## csv 批量模板
