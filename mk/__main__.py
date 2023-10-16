@@ -297,29 +297,21 @@ async def search_youtube(name:str):
             'preferredcodec': 'mp3',
             'preferredquality': 0
         }],
-        'geo_bypass': True
+        'no_warnings': True,
+        'ignoreerrors': True,
     }
     with YoutubeDL(ydl_opts) as ydl:
         # 搜索10条结果
-        search_count = 10
-        info = None
+        info = ydl.extract_info(f'ytsearch10:{name}', download=False)
         for i in range(10):
             try:
-                info = ydl.extract_info(f'ytsearch{search_count}:{name}', download=False)
-                break
-            except Exception as e:
-                search_count = search_count-1
-                continue
-        if info ==None:
-            return res
-        for i in range(10):
-            try:
-                title = info['entries'][i]['title']
-                url = info['entries'][i]['webpage_url']
-                res.append({
-                    'title': title,
-                    'url': url
-                })
+                if   info['entries'][i]!=None:
+                    title = info['entries'][i]['title']
+                    url = info['entries'][i]['webpage_url']
+                    res.append({
+                        'title': title,
+                        'url': url
+                    })
             except:
                 break
     # 根据相似度get_similarity重新排序res 
@@ -633,7 +625,7 @@ if  __name__ == '__main__':
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
     loop = asyncio.get_event_loop()
-    a=  loop.run_until_complete(search("萧十一郎"))
+    a=  loop.run_until_complete(search_youtube("萧十一郎"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))
