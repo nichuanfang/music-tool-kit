@@ -48,7 +48,7 @@ pip uninstall music-tool-kit
 ## 音乐下载
 
 ```bash
-mk  "网址" [输出] "[封面url]"
+mk  "网址" [标题] "[封面url]"
 
 ```
 
