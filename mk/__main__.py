@@ -28,16 +28,17 @@ console = Console()
 
 # 提取yt_dlp信息
 def  extract_info(url):
+    console.log(f"开始解析{url}...")
     ydl = YoutubeDL(params={
                 'quiet': True,
                 'no_color': True,
                 'extract_flat': True  
             })
-    
     info = ydl.extract_info(url, download=False)
     if info == None:
         console.log(f"{url}解析失败 请检查网址是否正确!")
         return None
+    console.log(f"{url}解析成功!")
     return info
 
 def download(url:str,title:str=None,cover_url:str=None):
