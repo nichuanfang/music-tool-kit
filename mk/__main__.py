@@ -11,7 +11,6 @@ from rich import print
 from bilibili_api import search as bilibili_search
 import csv
 import difflib
-from yt_dlp.utils import DownloadError
 
 # 支持的模型列表
 SUPPORT_MODELS = [
@@ -288,16 +287,6 @@ async def search_youtube(name:str):
     ydl_opts = {
         'quiet': True,
         'no_color': True,
-        'format': 'bestaudio/best',
-        'outtmpl': '%(title)s.%(ext)s',
-        'paths': {
-            'home': 'temp'
-        },
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': 0
-        }],
         'no_warnings': True,
         'ignoreerrors': True,
     }
@@ -625,8 +614,8 @@ if  __name__ == '__main__':
     # https://soundcloud.com/jeff-kaale/my-heart'
     # download('https://www.bilibili.com/video/BV1yR4y1L7KN/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click')
     # clip('青花瓷-周杰伦.mp3','00:00:00','00:00:30')
-    loop = asyncio.get_event_loop()
-    a=  loop.run_until_complete(search_youtube("萧十一郎"))
+    # loop = asyncio.get_event_loop()
+    # a=  loop.run_until_complete(search_youtube("卡农"))
     # 转换为秒
     # 调用异步函数search_bilibili_
     # res = asyncio.run(search_bilibili("a lover's Concerto"))

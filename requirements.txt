@@ -1,5 +1,5 @@
 rich==13.6.0
-yt-dlp==2023.10.7
+yt-dlp>=2023.10.13
 mutagen==1.47.0
 pillow==10.0.1
 bilibili-api-python>=16.1.0
