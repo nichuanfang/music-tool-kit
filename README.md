@@ -84,7 +84,7 @@ mk -s "关键字"
 ![search](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/search.png)
 支持 youtube bilibili 输出优先级 youtube > bilibili,输入列表序号,输入标题,完成下载
 
-> **Note**
+> [!NOTE]
 >
 > - 最多显示20条数据
 > - 直接按`Enter`可以跳出序号选择界面,输入的序号不能超过最大返回的条目数
