@@ -30,7 +30,7 @@ pip install -U music-tool-kit
 
 ![help](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/help.png)
 
-> **Note**
+> [!IMPORTANT]
 >
 > - [python](https://www.python.org/)版本:**3.11.0及以上**
 > - 需安装[ffmpeg](https://ffmpeg.org/)并正确配置环境变量
@@ -70,7 +70,7 @@ mk "https://www.youtube.com/playlist?list=PL8B3F8A7B0A9F4DE8 | 1,2,3,4,5"
 ```
 ![download_list](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/batch_download.png)
 
-> **Note**
+> [!TIP]
 >
 > - 标题格式为 **歌曲名-歌手(专辑名)** 输出歌曲格式默认为 **mp3**
 > - music-tool-kit会根据**标题**,自动将下载的音频元信息补全,包括歌曲名,歌手(艺术家),内置封面图片,以及专辑名称.如果不遵循该标题格式,元信息可能补全失败
@@ -84,7 +84,7 @@ mk -s "关键字"
 ![search](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/search.png)
 支持 youtube bilibili 输出优先级 youtube > bilibili,输入列表序号,输入标题,完成下载
 
-> [!NOTE]
+> [!TIP]
 >
 > - 最多显示20条数据
 > - 直接按`Enter`可以跳出序号选择界面,输入的序号不能超过最大返回的条目数
@@ -117,7 +117,7 @@ mk -e "输入的mp3文件" [模型名称]
 
 ![extract](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/inst.png)
 
-> **Note**
+> [!WARNING]
 > - 默认模型为`UVR_MDXNET_Main`,具体请结合音乐类型和自己的实际听感自行调整模型
 > - 伴奏提取比较吃 cpu 性能,时间比较漫长,请耐心等待,大概需要 5~10 分钟
 
