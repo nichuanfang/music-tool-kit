@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python3
-import requests
 import os
-from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB,ID3NoHeaderError
+
+import requests
 from PIL import Image
+from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB, ID3NoHeaderError
+
 
 # webp转jpg
 def  webp2jpg(webp_path,jpg_path):
@@ -22,7 +24,7 @@ class MP3:
 
         Args:
             mp3path (str): mp3文件路径
-        """        
+        """
         try:
             self.mp3path = mp3path.replace('?','')
             self.songFile = ID3(mp3path)
@@ -54,50 +56,50 @@ class MP3:
             os.remove(f'{mp3_name}.jpg')
         
         # 插入封面
-        self.songFile['APIC'] = APIC(  
-            encoding=0,
-            mime='image/jpg',  
-            type=3,
-            desc=u'Cover',
-            data=image_data
-        )
-        
-        print(f'封面{cover_url}添加完成')
-        
-    # 给mp3文件添加封面
-    def add_bytes_cover(self,image_data:bytes):
-        # 插入封面
-        self.songFile['APIC'] = APIC(  
+        self.songFile['APIC'] = APIC(
             encoding=0,
             mime='image/jpg',
             type=3,
             desc=u'Cover',
             data=image_data
         )
-
+        
+        print(f'封面{cover_url}添加完成')
+    
+    # 给mp3文件添加封面
+    def add_bytes_cover(self,image_data:bytes):
+        # 插入封面
+        self.songFile['APIC'] = APIC(
+            encoding=0,
+            mime='image/jpg',
+            type=3,
+            desc=u'Cover',
+            data=image_data
+        )
+    
     # 给mp3文件添加歌名
     def add_title(self,title):
         # 插入歌名
-        self.songFile['TIT2'] = TIT2(  
+        self.songFile['TIT2'] = TIT2(
             encoding=3,
             text=title
         )
         print(f'歌名{title}添加完成')
-        
+    
     # 给mp3文件添加歌手
     def add_artist(self,artist):
         # 插入歌手
-        self.songFile['TPE1'] = TPE1(  
+        self.songFile['TPE1'] = TPE1(
             encoding=3,
             text=artist
         )
         print(f'歌手{artist}添加完成')
-        
+    
     # 给mp3文件添加专辑
     def add_album(self,album):
         print(f'开始添加专辑{album}')
         # 插入专辑
-        self.songFile['TALB'] = TALB(  
+        self.songFile['TALB'] = TALB(
             encoding=3,
             text=album
         )
