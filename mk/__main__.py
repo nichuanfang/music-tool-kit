@@ -5,6 +5,7 @@ import os
 import sys
 
 from bilibili_api import search as bilibili_search
+from mutagen.mp4 import MP4
 from rich import print
 from rich.console import Console
 from yt_dlp import YoutubeDL
@@ -93,6 +94,14 @@ def download(url: str, title: str = None):
 		with YoutubeDL(ydl_opts) as ydl:
 			ydl.download([url])
 		
+		# 更改专辑名称为上级目录名称
+		# 获取上级目录名称
+		album = os.path.basename(os.getcwd())
+		
+		audio = MP4(f'{outtmpl}.m4a')
+		audio['\xa9alb'] = album  # 专辑
+		audio.save()
+		
 		# 解决不规则标题引起的控制台乱码问题
 		console.log(f"下载完成!")
 		return info
@@ -141,9 +150,11 @@ def batch_download(csv_path: str):
 				title = info['title']
 			if start_time != None and end_time != None:
 				clip(f'{title}.m4a', start_time, end_time)
-	# if instrumental == 'true' or instrumental == 'True':
-	# 	# 提取伴奏
-	# 	extract_accompaniment(f'{title}.m4a')
+
+
+# if instrumental == 'true' or instrumental == 'True':
+# 	# 提取伴奏
+# 	extract_accompaniment(f'{title}.m4a')
 
 
 def clip(path: str, start: str, end: str):
@@ -517,7 +528,7 @@ if __name__ == '__main__':
 	# title = info['title']
 	
 	# https://soundcloud.com/jeff-kaale/my-heart'
-	# download('https://youtu.be/2FswQIz19XE?si=G41BIw8Wp3Hv3fiB')
+	download('https://youtu.be/2FswQIz19XE?si=G41BIw8Wp3Hv3fiB')
 	# 测试伴奏提取
 	# extract_accompaniment('Damien Jurado - Ohio (Filous Remix).m4a')
 	
