@@ -453,7 +453,7 @@ def main(args=None):
 					print('列表为空!')
 					return
 				indexs = url.split('|')[1].split(',')
-				if len(indexs) == 0:
+				if len(indexs) == 1 and indexs[0] == '':
 					# 下载全部
 					for entry in entries:
 						try:
@@ -521,14 +521,14 @@ if __name__ == '__main__':
 	# mp3.save()
 	
 	
-	# info = extract_info('https://www.youtube.com/watch?v=zq-lIBwhWLk')
+	# info = extract_info('https://www.youtube.com/playlist?list=PLXqdiA7ZTh9WEXkz9Oimedlm3JRiDJ_hO')
 	# # 获取缩略图url
 	# thumbnail = info['thumbnail']
 	# # 获取标题
 	# title = info['title']
 	
 	# https://soundcloud.com/jeff-kaale/my-heart'
-	download('https://youtu.be/2FswQIz19XE?si=G41BIw8Wp3Hv3fiB')
+	# download('https://youtu.be/2FswQIz19XE?si=G41BIw8Wp3Hv3fiB')
 	# 测试伴奏提取
 	# extract_accompaniment('Damien Jurado - Ohio (Filous Remix).m4a')
 	
