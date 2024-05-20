@@ -1,4 +1,4 @@
 bilibili_api_python==16.1.1
 rich==13.7.0
 setuptools==58.0.0
-yt_dlp==2024.3.10
+yt_dlp
