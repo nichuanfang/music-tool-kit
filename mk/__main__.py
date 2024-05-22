@@ -57,7 +57,8 @@ def download(url: str, title: str = None):
 			print('获取下载地址失败!')
 			return
 	try:
-		download_title = info['title']
+		download_title = info['title'].replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
+			'|', ' ').replace('?', ' ').replace('*', ' ')
 	except:
 		print('获取标题失败!')
 		return
@@ -149,7 +150,8 @@ def batch_download(csv_path: str):
 				title = title.strip().replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
 					'|', ' ').replace('?', ' ').replace('*', ' ')
 			else:
-				title = info['title']
+				title = info['title'].replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
+					'|', ' ').replace('?', ' ').replace('*', ' ')
 			if start_time != None and end_time != None:
 				clip(f'{title}.m4a', start_time, end_time)
 
