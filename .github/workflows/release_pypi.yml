@@ -25,7 +25,8 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          echo "version=${{ github.ref }}" >> "$GITHUB_OUTPUT"
+          TAG_VERSION=$(echo "${{ github.ref }}" | sed 's/v\(.*\)/\1/')
+          echo "version=${TAG_VERSION}" >> $GITHUB_OUTPUT
 
       # 获取pypi的该项目的版本号
       - name: Get pypi version
@@ -46,7 +47,7 @@ jobs:
 
       - name: Replace version in setup.py
         run: |
-            sed -i "s/#version/${{ steps.get_version.outputs.version }}/g" setup.py
+          sed -i "s/#version/${{ steps.get_version.outputs.version }}/g" setup.py
 
       - name: Install dependencies
         run: |
