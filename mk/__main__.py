@@ -97,10 +97,12 @@ def download(url: str, title: str = None):
 		# 更改专辑名称为上级目录名称
 		# 获取上级目录名称
 		album = os.path.basename(os.getcwd())
-		
-		audio = MP4(f'{outtmpl}.m4a')
-		audio['\xa9alb'] = album  # 专辑
-		audio.save()
+		try:
+			audio = MP4(f'{outtmpl}.m4a')
+			audio['\xa9alb'] = album  # 专辑
+			audio.save()
+		except Exception as e:
+			console.log('更改专辑名称出错!')
 		
 		# 解决不规则标题引起的控制台乱码问题
 		console.log(f"下载完成!")
