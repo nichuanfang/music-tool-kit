@@ -21,12 +21,11 @@ jobs:
           python-version: 3.11.0
           cache: pip
 
-      # 读取setup.py setup方法的版本号
+      # 读取最新版本号
       - name: Get version
-
         id: get_version
         run: |
-          echo "version=$(python setup.py --version)" >> "$GITHUB_OUTPUT"
+          echo "version=${{ github.ref }}" >> "$GITHUB_OUTPUT"
 
       # 获取pypi的该项目的版本号
       - name: Get pypi version
@@ -44,6 +43,10 @@ jobs:
             echo "version is same, exit"
             exit 1
           fi
+
+      - name: Replace version in setup.py
+        run: |
+            sed -i "s/#version/${{ steps.get_version.outputs.version }}/g" setup.py
 
       - name: Install dependencies
         run: |
