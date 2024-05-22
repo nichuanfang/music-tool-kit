@@ -25,8 +25,7 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          TAG_VERSION=$(echo "${{ github.ref }}" | sed 's/v\(.*\)/\1/')
-          echo $TAG_VERSION
+          TAG_VERSION=$(basename "${{ github.ref }}")
           echo "version=${TAG_VERSION}" >> "$GITHUB_OUTPUT"
 
       # 获取pypi的该项目的版本号
