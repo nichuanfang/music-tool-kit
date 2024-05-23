@@ -12,7 +12,6 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 
 class PostInstallCommand(install):
 	"""Post-installation for installation mode."""
-	
 	def run(self):
 		install.run(self)
 		subprocess.call(['python', 'download_um.py'])
