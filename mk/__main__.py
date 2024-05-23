@@ -201,6 +201,20 @@ def clip(path: str, start: str, end: str):
 		os.rename('output.m4a', path)
 		console.log(f"剪辑完成!")
 
+# 破解音乐(暂时只支持网易云)
+def unblock_music(path:str):
+	# 根据bin/um.exe解锁当前目录 目的是方便itunes导入 . 当前指令需要在网易云音乐指定的下载目录执行!
+	# 1. 获取um.exe文件目录
+	# 2. 目录判断,判断是否存在VipSongsDownload的同级目录,提醒用户需要在VipSongsDownload同级目录(即网易云音乐设置的本地下载路径)执行此指令;
+	# 3. 扫描当前目录获取所有音频文件
+	# 4. 扫描当前目录的子目录VipSongsDownload的音频文件
+	# 5. 无需破解的mp3,m4a格式直接移动到dist,flac文件则需要转换为m4a格式再移动到dist
+	# 6. 处理ncm文件 转换为flac等,再转m4a,移动到dist目录,删除已破解的ncm文件
+	
+	
+	
+	pass
+
 
 # 获取两个字符串相似度
 # def get_similarity(s1: str, s2: str):
@@ -215,8 +229,6 @@ def clip(path: str, start: str, end: str):
 #     """
 # 	return difflib.SequenceMatcher(lambda x: x in ["【", "】", "(", ")", "-", "_", ".", "[", "]", "|"], s1.lower(),
 # 	                               s2.lower()).ratio()
-
-
 # 从youtube搜索歌曲
 async def search_youtube(name: str):
 	"""搜索歌曲
@@ -388,6 +400,7 @@ def main(args=None):
 		      '批量下载: mk csv_path\n'
 		      '搜索: mk -s name\n'
 		      '剪辑: mk -c audio_path start end\n'
+		      '破解: mk -u audio_path\n'
 		      '---------------------------------------------\n'
 		      )
 		return
@@ -450,6 +463,11 @@ def main(args=None):
 			# 下载地址 标题  开始时间 结束时间 是否生成伴奏(true or false)
 			writer.writerow(['url', 'title', 'start_time', 'end_time'])
 		print('生成成功!')
+	elif flag == '-u':
+		# 通过bin/um.exe来破解网易云音乐(暂时只支持网易云)
+		path = args[1]
+		unblock_music(path)
+		print('破解音乐成功!')
 	else:
 		# 判断flag是否是网址
 		if flag.startswith(('http://', 'https://')):
