@@ -10,6 +10,7 @@ from rich import print
 from rich.console import Console
 from yt_dlp import YoutubeDL
 
+
 # 支持的模型列表
 # SUPPORT_MODELS = [
 # 	'UVR_MDXNET_Main',
@@ -19,6 +20,26 @@ from yt_dlp import YoutubeDL
 # 	'UVR_MDXNET_KARA_2',
 # 	'Kim_Inst'
 # ]
+
+# 自定义文件名模板
+def sanitize_filename(name):
+	# 定义非法字符及其替换
+	replacements = {
+		':': ' -',  # 替换冒号为连字符
+		'/': '-',  # 替换斜杠为连字符
+		'\\': '-',  # 替换反斜杠为连字符
+		'?': '',  # 删除问号
+		'*': '',  # 删除星号
+		'<': '',  # 删除小于号
+		'>': '',  # 删除大于号
+		'|': '',  # 删除竖线
+		'"': '',  # 删除双引号
+	}
+	# 进行替换
+	for old, new in replacements.items():
+		name = name.replace(old, new)
+	return name
+
 
 console = Console()
 
@@ -63,9 +84,9 @@ def download(url: str, title: str = None):
 		return
 	with console.status(f"[bold green]正在下载{download_title}...\n") as status:
 		if title != None:
-			outtmpl = title.strip()
+			outtmpl = sanitize_filename(title.strip())
 		else:
-			outtmpl = download_title
+			outtmpl = sanitize_filename(download_title)
 		
 		ydl_opts = {
 			'quiet': True,
@@ -96,8 +117,9 @@ def download(url: str, title: str = None):
 		# 更改专辑名称为上级目录名称
 		# 获取上级目录名称
 		album = os.path.basename(os.getcwd())
+		
 		try:
-			audio = MP4(f'"{outtmpl}.m4a"')
+			audio = MP4(f'{outtmpl}.m4a')
 			audio['\xa9alb'] = album  # 专辑
 			audio.save()
 		except Exception as e:
@@ -145,11 +167,11 @@ def batch_download(csv_path: str):
 			info = download(url, title)
 			# 剪辑
 			if title != None:
-				title = title.strip()
+				title = sanitize_filename(title.strip())
 			else:
-				title = info['title']
+				title = sanitize_filename(info['title'])
 			if start_time != None and end_time != None:
-				clip(f'"{title}.m4a"', start_time, end_time)
+				clip(f'{title}.m4a', start_time, end_time)
 
 
 # if instrumental == 'true' or instrumental == 'True':
@@ -528,7 +550,7 @@ if __name__ == '__main__':
 	# title = info['title']
 	
 	# https://soundcloud.com/jeff-kaale/my-heart'
-	# download('https://youtu.be/2FswQIz19XE?si=G41BIw8Wp3Hv3fiB')
+	download('https://www.youtube.com/watch?v=wAal7vrTOFc')
 	# 测试伴奏提取
 	# extract_accompaniment('Damien Jurado - Ohio (Filous Remix).m4a')
 	
