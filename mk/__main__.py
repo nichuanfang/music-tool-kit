@@ -2,6 +2,7 @@
 import asyncio
 import csv
 import os
+import shutil
 import subprocess
 import sys
 
@@ -45,7 +46,6 @@ def sanitize_filename(name):
 console = Console()
 # 破解可执行文件的路径
 um_execute_path = os.path.join(os.path.dirname(__file__), 'bin', 'um.exe')
-
 
 # 提取yt_dlp信息
 def extract_info(url):
@@ -206,7 +206,7 @@ def clip(path: str, start: str, end: str):
 
 
 # 破解音乐(暂时只支持网易云)
-def unblock_music(file_path: str):
+def unblock_music():
 	# 根据bin/um.exe解锁当前目录 目的是方便itunes导入 . 当前指令需要在网易云音乐指定的下载目录执行!
 	# 1. 获取um.exe文件目录
 	# 2. 目录判断,判断是否存在VipSongsDownload的同级目录,提醒用户需要在VipSongsDownload同级目录(即网易云音乐设置的本地下载路径)执行此指令;
@@ -215,42 +215,77 @@ def unblock_music(file_path: str):
 	# 5. 无需破解的mp3,m4a格式直接移动到dist,flac文件则需要转换为m4a格式再移动到dist
 	# 6. 处理ncm文件 转换为flac等,再转m4a,移动到dist目录,删除已破解的ncm文件
 	
-	parent_dir = os.path.dirname(os.getcwd())
+	parent_dir = os.getcwd()
+	vsd_path = os.path.join(parent_dir, 'VipSongsDownload')
 	
 	# 递归一遍判断是否存在VipSongsDownload
-	
-	exit_flag = True
-	for file in os.listdir(parent_dir):
-		file_path = os.path.join(parent_dir, file)
-		if os.path.isdir(file_path) and file == 'VipSongsDownload':
-			# 只有同级目录存在VipSongsDownload才继续往下执行
-			exit_flag = False
-	
-	if exit_flag:
+	if not os.path.exists(vsd_path) or not os.path.isdir(vsd_path):
 		console.log(f"当前目录不是网易云音乐下载目录!请切换")
 		sys.exit(1)
 	
+	dist_path = os.path.join(parent_dir,'dist')
 	# 创建dist目录 存放破解好和无需破解的音频文件
-	os.mkdir(os.path.join(parent_dir,'dist'))
+	try:
+		os.mkdir(os.path.join(parent_dir,'dist'))
+	except: pass
+	
+	# 待处理的音频文件
+	unhandled_audio_paths = []
 	
 	for root, dirs, files in os.walk(os.path.dirname(os.getcwd())):
 		# 在files中筛选出音频文件
 		for file in files:
-			if file.endswith(['.m4a', 'mp3']):
+			if file.endswith(('.m4a', 'mp3')):
 				# 直接移动到dist目录
-				pass
+				path = os.path.join(root, file)
+				shutil.move(path, os.path.join(dist_path, file))
+			elif file.endswith('flac'):
+				unhandled_audio_paths.append(os.path.join(root,file))
+		
+	# walk vsd_path 对于其中的ncm文件进行破解
+	for vsd_root,vsd_dirs,vsd_files in os.walk(vsd_path):
+		for vsd_file in vsd_files:
+			if vsd_file.endswith(('.m4a','mp3')):
+				vsd_path = os.path.join(vsd_root, vsd_file)
+				shutil.move(vsd_path, os.path.join(dist_path, vsd_file))
+			else:
+				unhandled_audio_paths.append(os.path.join(vsd_path,vsd_file))
+	
+	# 处理音频文件
+	handle_unblock_music(unhandled_audio_paths,parent_dir,dist_path)
+	
+def handle_unblock_music(unhandled_audio_paths,parent_dir,dist_path):
+	temp_path = os.path.join(parent_dir,'temp')
+	
+	for path in unhandled_audio_paths:
+		audio_name =  os.path.basename(path)
+		if audio_name.endswith('.ncm'):
+			um_command = f'{um_execute_path}  -i "{path}" --skip-noop --update-metadata --overwrite -o temp'
+			try:
+				subprocess.run(um_command, shell=True)
+				# 	删除原文件
+				os.unlink(path)
+				flac2alac(os.path.join(temp_path,audio_name.rsplit('.',1)[0]+'.flac'),dist_path)
+			except subprocess.CalledProcessError as e:
+				print(e)
+		elif audio_name.endswith('flac'):
+			# 调用ffmpeg转换
+			flac2alac(path,dist_path)
+		else:
 			pass
-		
-		# 在dirs获取VipSongsDownload文件夹 继续walk
-		
-		pass
-	
-	command = f'{um_execute_path} -i  {file_path}  -o output.m4a'
-	
-	subprocess.call(command, shell=True)
-	
-	pass
 
+
+# flac转为alac格式
+def  flac2alac(flac_path,dist_path):
+	audio_name = os.path.basename(flac_path).rsplit('.',1)[0]
+	dest_path = os.path.join(dist_path,audio_name+'.m4a')
+	# 使用 ffmpeg 进行转换
+	command = f'ffmpeg -i "{flac_path}" -acodec alac -vcodec copy "{dest_path}"'
+	try:
+		subprocess.run(command, check=True)
+		os.unlink(flac_path)
+	except subprocess.CalledProcessError as e:
+		print(e)
 
 # 获取两个字符串相似度
 # def get_similarity(s1: str, s2: str):
@@ -436,7 +471,7 @@ def main(args=None):
 		      '批量下载: mk csv_path\n'
 		      '搜索: mk -s name\n'
 		      '剪辑: mk -c audio_path start end\n'
-		      '破解: mk -u audio_path\n'
+		      '破解: mk -u\n'
 		      '---------------------------------------------\n'
 		      )
 		return
@@ -501,8 +536,7 @@ def main(args=None):
 		print('生成成功!')
 	elif flag == '-u':
 		# 通过bin/um.exe来破解网易云音乐(暂时只支持网易云)
-		path = args[1]
-		unblock_music(path)
+		unblock_music()
 		print('破解音乐成功!')
 	else:
 		# 判断flag是否是网址
@@ -623,6 +657,6 @@ if __name__ == '__main__':
 	# print(info)
 	
 	# 测试破解音乐
-	unblock_music('')
+	unblock_music()
 	
 	pass
