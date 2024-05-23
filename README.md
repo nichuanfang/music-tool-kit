@@ -1,4 +1,4 @@
-**music-tool-kit**，主要使用场景为提取[youtube](https://www.youtube.com)和[bilibili](https://www.bilibili.com)视频中的音频,支持**音频下载**,**元信息自动补全**,**音频截取**,**提取伴奏**,**youtube 列表批量下载**,**自定义批量下载**等.配合[spotify](https://open.spotify.com)的**本地文件**功能可以极大的提升音乐体验([教程](https://www.bilibili.com/video/BV1VL411T7mp/?vd_source=04c6a0d121b6fb871e3d3c0a2554b29b))
+**music-tool-kit**，主要使用场景为提取[youtube](https://www.youtube.com)和[bilibili](https://www.bilibili.com)视频中的音频,支持**音频下载**,**元信息自动补全**,**音频截取**,**提取伴奏**,**youtube 列表批量下载**,**自定义批量下载**等.配合[itunes](https://www.bilibili.com/video/BV1sK4y1w75o/?spm_id_from=333.337.search-card.all.click&vd_source=04c6a0d121b6fb871e3d3c0a2554b29b)的**本地文件**功能可以极大的提升音乐体验([教程](https://www.bilibili.com/video/BV1VL411T7mp/?vd_source=04c6a0d121b6fb871e3d3c0a2554b29b))
 
 > [!NOTE]
 >
