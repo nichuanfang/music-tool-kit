@@ -2,6 +2,7 @@
 import asyncio
 import csv
 import os
+import subprocess
 import sys
 
 from bilibili_api import search as bilibili_search
@@ -42,6 +43,8 @@ def sanitize_filename(name):
 
 
 console = Console()
+# 破解可执行文件的路径
+um_execute_path = os.path.join(os.path.dirname(__file__), 'bin', 'um.exe')
 
 
 # 提取yt_dlp信息
@@ -201,8 +204,9 @@ def clip(path: str, start: str, end: str):
 		os.rename('output.m4a', path)
 		console.log(f"剪辑完成!")
 
+
 # 破解音乐(暂时只支持网易云)
-def unblock_music(path:str):
+def unblock_music(file_path: str):
 	# 根据bin/um.exe解锁当前目录 目的是方便itunes导入 . 当前指令需要在网易云音乐指定的下载目录执行!
 	# 1. 获取um.exe文件目录
 	# 2. 目录判断,判断是否存在VipSongsDownload的同级目录,提醒用户需要在VipSongsDownload同级目录(即网易云音乐设置的本地下载路径)执行此指令;
@@ -211,7 +215,39 @@ def unblock_music(path:str):
 	# 5. 无需破解的mp3,m4a格式直接移动到dist,flac文件则需要转换为m4a格式再移动到dist
 	# 6. 处理ncm文件 转换为flac等,再转m4a,移动到dist目录,删除已破解的ncm文件
 	
+	parent_dir = os.path.dirname(os.getcwd())
 	
+	# 递归一遍判断是否存在VipSongsDownload
+	
+	exit_flag = True
+	for file in os.listdir(parent_dir):
+		file_path = os.path.join(parent_dir, file)
+		if os.path.isdir(file_path) and file == 'VipSongsDownload':
+			# 只有同级目录存在VipSongsDownload才继续往下执行
+			exit_flag = False
+	
+	if exit_flag:
+		console.log(f"当前目录不是网易云音乐下载目录!请切换")
+		sys.exit(1)
+	
+	# 创建dist目录 存放破解好和无需破解的音频文件
+	os.mkdir(os.path.join(parent_dir,'dist'))
+	
+	for root, dirs, files in os.walk(os.path.dirname(os.getcwd())):
+		# 在files中筛选出音频文件
+		for file in files:
+			if file.endswith(['.m4a', 'mp3']):
+				# 直接移动到dist目录
+				pass
+			pass
+		
+		# 在dirs获取VipSongsDownload文件夹 继续walk
+		
+		pass
+	
+	command = f'{um_execute_path} -i  {file_path}  -o output.m4a'
+	
+	subprocess.call(command, shell=True)
 	
 	pass
 
@@ -568,7 +604,7 @@ if __name__ == '__main__':
 	# title = info['title']
 	
 	# https://soundcloud.com/jeff-kaale/my-heart'
-	download('https://www.youtube.com/watch?v=wAal7vrTOFc')
+	# download('https://www.youtube.com/watch?v=wAal7vrTOFc')
 	# 测试伴奏提取
 	# extract_accompaniment('Damien Jurado - Ohio (Filous Remix).m4a')
 	
@@ -585,4 +621,8 @@ if __name__ == '__main__':
 	# batch_download('test.csv')
 	# info = extract_info('https://www.youtube.com/playlist?list=PL68LFSU9iLnC3YSNDqfy3x-1uF8czx33c')
 	# print(info)
+	
+	# 测试破解音乐
+	unblock_music('')
+	
 	pass
