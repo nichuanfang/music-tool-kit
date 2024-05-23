@@ -57,15 +57,13 @@ def download(url: str, title: str = None):
 			print('获取下载地址失败!')
 			return
 	try:
-		download_title = info['title'].replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
-			'|', ' ').replace('?', ' ').replace('*', ' ')
+		download_title = info['title']
 	except:
 		print('获取标题失败!')
 		return
 	with console.status(f"[bold green]正在下载{download_title}...\n") as status:
 		if title != None:
-			outtmpl = title.strip().replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
-				'|', ' ').replace('?', ' ').replace('*', ' ')
+			outtmpl = title.strip()
 		else:
 			outtmpl = download_title
 		
@@ -99,7 +97,7 @@ def download(url: str, title: str = None):
 		# 获取上级目录名称
 		album = os.path.basename(os.getcwd())
 		try:
-			audio = MP4(f'{outtmpl}.m4a')
+			audio = MP4(f'"{outtmpl}.m4a"')
 			audio['\xa9alb'] = album  # 专辑
 			audio.save()
 		except Exception as e:
@@ -147,13 +145,11 @@ def batch_download(csv_path: str):
 			info = download(url, title)
 			# 剪辑
 			if title != None:
-				title = title.strip().replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
-					'|', ' ').replace('?', ' ').replace('*', ' ')
+				title = title.strip()
 			else:
-				title = info['title'].replace('/', '').replace('\\', '').replace('⧸', ' ').replace('⧹', ' ').replace(
-					'|', ' ').replace('?', ' ').replace('*', ' ')
+				title = info['title']
 			if start_time != None and end_time != None:
-				clip(f'{title}.m4a', start_time, end_time)
+				clip(f'"{title}.m4a"', start_time, end_time)
 
 
 # if instrumental == 'true' or instrumental == 'True':
