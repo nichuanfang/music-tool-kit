@@ -1,20 +1,10 @@
-import subprocess
-
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 
 with open('README.md', 'r', encoding='utf-8') as f:
 	readme = f.read()
 
 with open('requirements.txt', 'r', encoding='utf-8') as f:
 	requirements = f.read()
-
-
-class PostInstallCommand(install):
-	"""Post-installation for installation mode."""
-	def run(self):
-		install.run(self)
-		subprocess.call(['python', 'download_um.py'])
 
 
 setup(
@@ -47,9 +37,6 @@ setup(
 	include_package_data=True,
 	package_data={
 		'mk': ['*.txt', 'bin/um.exe']
-	},
-	cmdclass={
-		'install': PostInstallCommand,
 	},
 	python_requires='>=3.11',
 	install_requires=requirements,
