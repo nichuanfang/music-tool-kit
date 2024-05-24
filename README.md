@@ -17,6 +17,7 @@
   - [提取伴奏](#提取伴奏)
   - [csv 批量模板](#csv-批量模板)
   - [批量下载](#批量下载)
+  - [音乐破解](#音乐破解)
 - [License](#license)
 
 # 环境准备
@@ -143,6 +144,17 @@ mk "csv文件"
 
 ![csv_download](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/example/csv_download.png)
 
+## 音乐破解
+
+```bash
+mk -u
+```
+
+> [!TIP]
+>
+> - 暂时只支持网易云音乐
+
 # License
 
 This work is released under the MIT license. A copy of the license is provided in the [LICENSE](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/LICENSE) file.
+
