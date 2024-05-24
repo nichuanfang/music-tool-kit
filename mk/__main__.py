@@ -266,7 +266,12 @@ def handle_unblock_music(unhandled_audio_paths,parent_dir,dist_path):
 				subprocess.run(um_command, shell=True)
 				# 	删除原文件
 				os.unlink(path)
-				flac2alac(os.path.join(temp_path,audio_name.rsplit('.',1)[0]+'.flac'),dist_path)
+				# 判断生成的是什么格式的文件
+				if os.path.exists(os.path.join(temp_path,audio_name.rsplit('.',1)[0]+'.flac')):
+					# 生成的是flac文件
+					flac2alac(os.path.join(temp_path,audio_name.rsplit('.',1)[0]+'.flac'),dist_path)
+				elif os.path.exists(os.path.join(temp_path,audio_name.rsplit('.',1)[0]+'.mp3')):
+					shutil.move(os.path.join(temp_path,audio_name.rsplit('.',1)[0]+'.mp3'),os.path.join(dist_path,audio_name.rsplit('.',1)[0]+'.mp3'))
 			except subprocess.CalledProcessError as e:
 				print(e)
 		elif audio_name.endswith('flac'):
