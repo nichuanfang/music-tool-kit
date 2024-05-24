@@ -232,7 +232,8 @@ def unblock_music():
 	# 待处理的音频文件
 	unhandled_audio_paths = []
 	
-	for root, dirs, files in os.walk(os.path.dirname(os.getcwd())):
+	
+	for root, dirs, files in os.walk(os.getcwd()):
 		# 在files中筛选出音频文件
 		for file in files:
 			if file.endswith(('.m4a', 'mp3')):
