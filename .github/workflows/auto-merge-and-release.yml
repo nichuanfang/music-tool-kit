@@ -1,0 +1,72 @@
+# .github/workflows/auto-merge-and-release.yml
+name: Auto Merge Dependabot PRs and Release
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+jobs:
+  auto_merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (required for GitHub Script)
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Merge Dependabot PRs
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const { context, github } = require('@actions/github');
+            const pull_number = context.payload.pull_request.number;
+            await github.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number,
+              merge_method: 'squash',
+            });
+
+  release:
+    needs: auto_merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Bump version and push tag
+        id: bump_version
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout main
+          # Bump version (you need to implement bump_version.py to update the version)
+          python bump_version.py
+          VERSION=$(cat VERSION)
+          git commit -am "Bump version to $VERSION"
+          git tag $VERSION
+          git push origin main --tags
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.bump_version.outputs.VERSION }}
+          release_name: Release ${{ steps.bump_version.outputs.VERSION }}
+          body: |
+            Automatic release of version ${{ steps.bump_version.outputs.VERSION }}.
+          draft: false
+          prerelease: false
