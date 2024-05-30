@@ -53,9 +53,14 @@ def extract_info(url):
 	ydl = YoutubeDL(params={
 		'quiet': True,
 		'no_color': True,
+		'retries': 3,
 		'extract_flat': True
 	})
-	info = ydl.extract_info(url, download=False)
+	try:
+		info = ydl.extract_info(url, download=False)
+	except Exception as e:
+		console.log(e)
+		console.log('yt_dlp可能版本有变动,请更新music-tool-kit!')
 	if info == None:
 		console.log(f"{url}解析失败 请检查网址是否正确!")
 		return None
@@ -98,6 +103,7 @@ def download(url: str, title: str = None):
 			'outtmpl': outtmpl,
 			'nocheckcertificate': True,
 			'writethumbnail': True,
+			'retries': 3,
 			'postprocessors': [
 				{
 					'key': 'FFmpegExtractAudio',
@@ -114,8 +120,12 @@ def download(url: str, title: str = None):
 				}
 			]
 		}
-		with YoutubeDL(ydl_opts) as ydl:
-			ydl.download([url])
+		try:
+			with YoutubeDL(ydl_opts) as ydl:
+				ydl.download([url])
+		except Exception as e:
+			console.log(e)
+			console.log('yt_dlp可能版本有变动,请更新music-tool-kit!')
 		
 		# 更改专辑名称为上级目录名称
 		# 获取上级目录名称
