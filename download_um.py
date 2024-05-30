@@ -3,7 +3,7 @@ import tarfile
 
 import requests
 
-# 音乐解锁软件的版本号 更新地址: https://git.unlock-music.dev/um/-/packages/generic/cli-build
+# 音乐解锁软件的版本号 更新地址: https://git.unlock-music.dev/um/-/packages/generic/cli-build 可以先通过访问这个地址 获取响应的Location  从而获取版本号
 um_version = '92'
 
 def download_and_extract_um():
