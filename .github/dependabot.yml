@@ -12,4 +12,3 @@ updates:
     allow:
       - dependency-name: "bilibili_api_python"
       - dependency-name: "yt-dlp"
-      - dependency-name: "my-tmdb"

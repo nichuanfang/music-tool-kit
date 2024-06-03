@@ -12,6 +12,7 @@ permissions:
   packages: write
 
 jobs:
+  #更新草稿
   update_release_draft:
     permissions:
       contents: write  # for release-drafter/release-drafter to create a github release
