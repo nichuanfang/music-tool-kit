@@ -1,3 +1,15 @@
+<!-- MANPAGE: BEGIN EXCLUDED SECTION -->
+<div align="center">
+
+[![music-tool-kit](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/.github/banner.svg)](#readme)
+
+[![PyPi](https://img.shields.io/badge/-PyPi-blue.svg?logo=pypi&labelColor=555555&style=for-the-badge)](https://pypi.org/project/music-tool-kit "music-tool-kit")
+[![License: Unlicense](https://img.shields.io/badge/-Unlicense-blue.svg?style=for-the-badge)](LICENSE "License")
+[![Commits](https://img.shields.io/github/commit-activity/m/nichuanfang/music-tool-kit?label=commits&style=for-the-badge)](https://github.com/nichuanfang/music-tool-kit/commits "Commit History")
+
+</div>
+<!-- MANPAGE: END EXCLUDED SECTION -->
+
 **music-tool-kit**，主要使用场景为提取[youtube](https://www.youtube.com)和[bilibili](https://www.bilibili.com)视频中的音频,支持**音频下载**,**元信息自动补全**,**音频截取**,**提取伴奏**,**youtube 列表批量下载**,**自定义批量下载**等.配合[itunes](https://www.bilibili.com/video/BV1sK4y1w75o/?spm_id_from=333.337.search-card.all.click&vd_source=04c6a0d121b6fb871e3d3c0a2554b29b)的**本地文件**功能可以极大的提升音乐体验([教程](https://www.bilibili.com/video/BV1VL411T7mp/?vd_source=04c6a0d121b6fb871e3d3c0a2554b29b))
 
 > [!NOTE]
@@ -7,17 +19,17 @@
 ---
 **内容目录**：
 - [环境准备](#环境准备)
-  - [安装](#安装)
+  - [安装 ⭐⭐⭐](#安装)
   - [升级](#升级)
   - [卸载](#卸载)
 - [使用](#使用)
-  - [音乐下载](#音乐下载)
+  - [音乐下载 ⭐⭐⭐](#音乐下载)
   - [音乐搜索](#音乐搜索)
   - [音乐剪辑](#音乐剪辑)
   - [提取伴奏](#提取伴奏)
   - [csv 批量模板](#csv-批量模板)
-  - [批量下载](#批量下载)
-  - [音乐破解](#音乐破解)
+  - [批量下载 ⭐⭐](#批量下载) 
+  - [音乐破解 ⭐⭐](#音乐破解)
 - [License](#license)
 
 # 环境准备
@@ -153,6 +165,7 @@ mk -u
 > [!TIP]
 >
 > - 暂时只支持网易云音乐
+> - 需要在网易云音乐的下载文件夹执行`mk -u`
 
 # License
 
