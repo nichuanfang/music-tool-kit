@@ -1,7 +1,7 @@
 <!-- MANPAGE: BEGIN EXCLUDED SECTION -->
 <div align="center">
 
-[![music-tool-kit]([![SVG Banners](https://svg-banners.vercel.app/api?type=origin&text1=Dynamic%20SVG%20🤠&text2=💖%20Open%20Source&width=800&height=400)](https://github.com/Akshay090/svg-banners))](#readme)
+[![music-tool-kit](https://raw.githubusercontent.com/nichuanfang/music-tool-kit/main/.github/banner.svg)](#readme)
 
 [![PyPi](https://img.shields.io/badge/-PyPi-blue.svg?logo=pypi&labelColor=555555&style=for-the-badge)](https://pypi.org/project/music-tool-kit "music-tool-kit")
 [![License: Unlicense](https://img.shields.io/badge/-Unlicense-blue.svg?style=for-the-badge)](LICENSE "License")
