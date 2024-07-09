@@ -56,5 +56,6 @@ jobs:
           TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
           YT_DLP_VERSION: ${{steps.release-drafter.outputs.tag_name}}
         run: |
+          pip install wheel twine
           python setup.py sdist bdist_wheel
           twine upload dist/*
