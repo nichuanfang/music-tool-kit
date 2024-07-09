@@ -1,13 +1,12 @@
-name: Update Bin
+name: update ytdlp and release
 
 on:
-  schedule:
-    # 每天UTC时间00:00运行
-    - cron: '0 0 1 * *'
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+  schedule:
+    # 每月1号
+    - cron: '0 0 1 * *'
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   update-and-publish:
@@ -40,13 +39,6 @@ jobs:
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # 获取并安装 um.exe
-      # - name: Update um.exe
-      #   run: |
-      #     um_version="最新的版本号逻辑"
-      #     wget -O um-windows-amd64.tar.gz "f'{um_version}/um-windows-amd64.tar.gz'"
-      #     tar -zxvf um-windows-amd64.tar.gz -C /path/to/extract/
 
       # 构建并发布
       - name: Build and publish
