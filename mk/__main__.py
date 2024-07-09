@@ -1,5 +1,6 @@
 # !/usr/bin/env python3
 import asyncio
+import copy
 import csv
 import os
 import shutil
@@ -12,6 +13,7 @@ from rich import print
 from rich.console import Console
 from yt_dlp import YoutubeDL
 
+AUDIO_FORMATS = ("m4a", "mp3", "opus", "wav")
 
 # 支持的模型列表
 # SUPPORT_MODELS = [
@@ -61,11 +63,110 @@ def extract_info(url):
 	except Exception as e:
 		console.log(e)
 		console.log('yt_dlp可能版本有变动,请更新music-tool-kit!')
-	if info == None:
+		return 
+	if info is None:
 		console.log(f"{url}解析失败 请检查网址是否正确!")
 		return None
 	console.log(f"{url}解析成功!")
 	return info
+
+def get_format(format: str, quality: str) -> str:
+	"""
+	Returns format for download
+
+	Args:
+	  format (str): format selected
+	  quality (str): quality selected
+
+	Raises:
+	  Exception: unknown quality, unknown format
+
+	Returns:
+	  dl_format: Formatted download string
+	"""
+	format = format or "any"
+	
+	if format.startswith("custom:"):
+		return format[7:]
+	
+	if format == "thumbnail":
+		# Quality is irrelevant in this case since we skip the download
+		return "bestaudio/best"
+	
+	if format in AUDIO_FORMATS:
+		# Audio quality needs to be set post-download, set in opts
+		return f"bestaudio/best"
+	
+	if format in ("mp4", "any"):
+		if quality == "audio":
+			return "bestaudio/best"
+		# video {res} {vfmt} + audio {afmt} {res} {vfmt}
+		vfmt, afmt = ("[ext=mp4]", "[ext=m4a]") if format == "mp4" else ("", "")
+		vres = f"[height<={quality}]" if quality != "best" else ""
+		vcombo = vres + vfmt
+		
+		# iOS has strict requirements for video files, requiring h264 or h265
+		# video codec and aac audio codec in MP4 container. This format string
+		# attempts to get the fully compatible formats first, then the h264/h265
+		# video codec with any M4A audio codec (because audio is faster to
+		# convert if needed), and falls back to getting the best available MP4
+		# file.
+		return f"bestvideo[vcodec~='^((he|a)vc|h26[45])']{vres}+bestaudio[acodec=aac]/bestvideo[vcodec~='^((he|a)vc|h26[45])']{vres}+bestaudio{afmt}/bestvideo{vcombo}+bestaudio{afmt}/best{vcombo}"
+	
+	raise Exception(f"Unkown format {format}")
+
+def get_opts(format: str, quality: str, ytdl_opts: dict) -> dict:
+	"""
+	Returns extra download options
+	Mostly postprocessing options
+
+	Args:
+	  format (str): format selected
+	  quality (str): quality of format selected (needed for some formats)
+	  ytdl_opts (dict): current options selected
+
+	Returns:
+	  ytdl_opts: Extra options
+	"""
+	
+	opts = copy.deepcopy(ytdl_opts)
+	
+	postprocessors = []
+	
+	if format in AUDIO_FORMATS:
+		postprocessors.append(
+			{
+				"key": "FFmpegExtractAudio",
+				"preferredcodec": format,
+				"preferredquality": 0 if quality == "best" else quality,
+			}
+		)
+		
+		# Audio formats without thumbnail
+		if format not in ("wav") and "writethumbnail" not in opts:
+			opts["writethumbnail"] = True
+			postprocessors.append(
+				{
+					"key": "FFmpegThumbnailsConvertor",
+					"format": "jpg",
+					"when": "before_dl",
+				}
+			)
+			postprocessors.append({"key": "FFmpegMetadata"})
+			postprocessors.append({"key": "EmbedThumbnail"})
+	
+	if format == "thumbnail":
+		opts["skip_download"] = True
+		opts["writethumbnail"] = True
+		postprocessors.append(
+			{"key": "FFmpegThumbnailsConvertor", "format": "jpg", "when": "before_dl"}
+		)
+	
+	opts["postprocessors"] = postprocessors + (
+		opts["postprocessors"] if "postprocessors" in opts else []
+	)
+	return opts
+
 
 
 def download(url: str, title: str = None):
@@ -99,26 +200,12 @@ def download(url: str, title: str = None):
 		ydl_opts = {
 			'quiet': True,
 			'no_color': True,
-			'format': 'bestaudio/best',
+			'format': get_format('m4a','best'),
 			'outtmpl': outtmpl,
 			'nocheckcertificate': True,
 			'writethumbnail': True,
 			'retries': 3,
-			'postprocessors': [
-				{
-					'key': 'FFmpegExtractAudio',
-					'preferredcodec': 'aac',
-					'preferredquality': 0
-				},
-				{
-					'key': 'FFmpegMetadata',
-					'add_metadata': True,
-				},
-				{
-					'key': 'EmbedThumbnail',
-					'already_have_thumbnail': False
-				}
-			]
+			**get_opts('m4a','best', {})
 		}
 		try:
 			with YoutubeDL(ydl_opts) as ydl:
@@ -654,7 +741,7 @@ if __name__ == '__main__':
 	# title = info['title']
 	
 	# https://soundcloud.com/jeff-kaale/my-heart'
-	# download('https://www.youtube.com/watch?v=wAal7vrTOFc')
+	download('https://www.youtube.com/watch?v=ujFR8IlaBWc')
 	# 测试伴奏提取
 	# extract_accompaniment('Damien Jurado - Ohio (Filous Remix).m4a')
 	
@@ -673,6 +760,6 @@ if __name__ == '__main__':
 	# print(info)
 	
 	# 测试破解音乐
-	unblock_music()
+	# unblock_music()
 	
 	pass
