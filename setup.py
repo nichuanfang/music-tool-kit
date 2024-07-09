@@ -4,6 +4,11 @@ from setuptools import setup, find_packages
 with open('README.md', 'r', encoding='utf-8') as f:
     readme = f.read()
 
+
+with open('requirements.txt', 'r', encoding='utf-8') as f:
+    requirements = f.read()
+
+
 setup(
     name='music-tool-kit',
     version=os.getenv('YT_DLP_VERSION'),
@@ -36,9 +41,7 @@ setup(
         'mk': ['*.txt', 'bin/um.exe']
     },
     python_requires='>=3.11',
-    install_requires=[
-        package.split('=')[0].strip() for package in open('Pipfile').read().split('\n') if '==' in package
-    ],
+    install_requires=requirements,
     entry_points={
         'console_scripts': [
             'mk = mk.__main__:main',

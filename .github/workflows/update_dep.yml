@@ -26,20 +26,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      # 更新yt-dlp
       - name: Update yt-dlp
         continue-on-error: true
         run: |
-          pip install pipenv
-          pipenv sync
-          VER=`pipenv run pip list -o | awk '$1 == "yt-dlp" {print $3}'`
-          if [ -n "$VER" ]; then
-            pipenv update yt-dlp
-            git config --global user.email "updater@metube"
-            git config --global user.name "AutoUpdater"
-            git commit -m 'upgraded yt-dlp' Pipfile.lock
-            git push
-          fi
 
       - name: release-drafter
         id: release-drafter
