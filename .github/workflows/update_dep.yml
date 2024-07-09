@@ -29,6 +29,8 @@ jobs:
       - name: Update yt-dlp
         continue-on-error: true
         run: |
+          python update_ytdlp.py
+          pip install -r requirements.txt
 
       - name: release-drafter
         id: release-drafter
