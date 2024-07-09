@@ -1,11 +1,11 @@
 name: update_release_draft.yml
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   pull_request:
-    types: [ opened, reopened, synchronize ]
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
@@ -15,10 +15,10 @@ jobs:
   #更新草稿
   update_release_draft:
     permissions:
-      contents: write  # for release-drafter/release-drafter to create a github release
-      pull-requests: write  # for release-drafter/release-drafter to add label to PR
+      contents: write # for release-drafter/release-drafter to create a github release
+      pull-requests: write # for release-drafter/release-drafter to add label to PR
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
