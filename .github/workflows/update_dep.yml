@@ -5,6 +5,9 @@ on:
     # 每天UTC时间00:00运行
     - cron: '0 0 1 * *'
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   update-and-publish:
