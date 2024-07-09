@@ -15,14 +15,13 @@ jobs:
     steps:
       # 克隆代码仓库
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 设置Python环境
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          cache: pip
 
       # 更新yt-dlp
       - name: Update yt-dlp
