@@ -28,6 +28,7 @@ jobs:
 
       # 更新yt-dlp
       - name: Update yt-dlp
+        continue-on-error: true
         run: |
           pip install pipenv
           pipenv sync
