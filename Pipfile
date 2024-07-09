@@ -7,6 +7,7 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
+twine="*"
 bilibili_api_python="16.2.0"
 rich="13.7.1"
 setuptools="70.0.0"
