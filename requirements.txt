@@ -1,0 +1,4 @@
+twine==5.1.1
+rich==13.7.1
+setuptools==70.0.0
+yt-dlp==2024.7.8
